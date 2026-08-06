@@ -12,11 +12,8 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  // late AnimationController _animationController;
-  // late Animation<Offset> _animationBottom;
-  // late Animation<Offset> _animationTop;
-
   late SplashScreenController _splashScreenController;
+
   @override
   void initState() {
     super.initState();
@@ -24,40 +21,14 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
       context: context,
     );
-    // _animationController =
-    //     AnimationController(vsync: this, duration: Duration(seconds: 1))
-    //       ..addStatusListener((status) {
-    //         print(status);
-    //         if (status ==
-    //             AnimationStatus.completed) /* OR =>   status.isCompleted */ {
-    //           Navigator.pushNamedAndRemoveUntil(
-    //             context,
-    //             RouteNames.onb,
-    //             (route) => false,
-    //           );
-    //         }
-    //       });
-    // _animationBottom =
-    //     Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero).animate(
-    //       CurvedAnimation(
-    //         parent: _animationController,
-    //         curve: Curves.easeInOut,
-    //       ),
-    //     );
-    // _animationTop = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
-    //     .animate(
-    //       CurvedAnimation(
-    //         parent: _animationController,
-    //         curve: Curves.easeInOut,
-    //       ),
-    //     );
-    // _animationController.forward();
   }
+
   @override
   void dispose() {
-    // _animationController.dispose();
+    _splashScreenController.disposeFunction();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
