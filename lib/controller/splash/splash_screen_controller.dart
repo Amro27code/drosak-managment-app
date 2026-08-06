@@ -12,7 +12,10 @@ class SplashScreenController {
   final BuildContext _context;
   final TickerProvider _vsync;
   SplashScreenController({required this._context,required this._vsync}){
-
+    initController();
+  }
+  void initController(){
+    startAnimation();
   }
   void startAnimation(){
     _animationController =
