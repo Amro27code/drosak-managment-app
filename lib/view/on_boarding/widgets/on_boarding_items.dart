@@ -1,3 +1,4 @@
+import 'package:drosak_managment_app/core/resources/height_manager.dart';
 import 'package:drosak_managment_app/model/on_boarding/on_boarding_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,7 +14,7 @@ class OnBoardingItems extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
-        spacing: 60,
+        spacing: HeightManager.h60,
         mainAxisAlignment: .center,
         crossAxisAlignment: .center,
         children: [

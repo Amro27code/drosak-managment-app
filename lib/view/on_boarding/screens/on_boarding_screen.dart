@@ -1,3 +1,4 @@
+import 'package:drosak_managment_app/core/resources/height_manager.dart';
 import 'package:drosak_managment_app/view/on_boarding/body/on_boarding_body.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,7 @@ class OnBoardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: OnBoardingBody(),
-      bottomNavigationBar: Container(color: Colors.green, height: 39),
+      bottomNavigationBar: Container(color: Colors.green, height: HeightManager.h39),
     );
   }
 }
