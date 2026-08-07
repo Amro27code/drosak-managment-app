@@ -1,4 +1,5 @@
 import 'package:drosak_managment_app/core/resources/height_manager.dart';
+import 'package:drosak_managment_app/core/strings/font_manager.dart';
 import 'package:drosak_managment_app/model/on_boarding/on_boarding_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,7 +24,7 @@ class OnBoardingItems extends StatelessWidget {
             onBoardingModel.title,
             textAlign: .center,
             style: TextStyle(
-              fontFamily: "AA-GALAXY",
+              fontFamily: FontManager.aaGalaxy,
               fontSize: 20,
               color: ColorManager.black,
             ),
