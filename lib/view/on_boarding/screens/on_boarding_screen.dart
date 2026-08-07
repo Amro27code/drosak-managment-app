@@ -10,7 +10,7 @@ class OnBoardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: OnBoardingBody(),
-      bottomNavigationBar: OnBoardingNavBar(),
+      bottomNavigationBar: OnBoardingNavBar(currentIndex:2 ,dotCount: 5,),
     );
   }
 }
