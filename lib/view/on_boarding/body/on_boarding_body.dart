@@ -12,14 +12,17 @@ class OnBoardingBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: PageView.builder(
-        controller: _pageController,
-        itemCount: ConstListValues.onBoardingModel.length,
-        onPageChanged:onPageChanged,
-        itemBuilder: (BuildContext context, int index) =>
-            OnBoardingItems(
-              onBoardingModel: ConstListValues.onBoardingModel[index],
-            ),
+      child: Directionality(
+        textDirection: .rtl,
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: ConstListValues.onBoardingModel.length,
+          onPageChanged:onPageChanged,
+          itemBuilder: (BuildContext context, int index) =>
+              OnBoardingItems(
+                onBoardingModel: ConstListValues.onBoardingModel[index],
+              ),
+        ),
       ),
     );
   }

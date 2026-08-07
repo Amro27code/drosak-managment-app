@@ -10,13 +10,14 @@ class OnBoardingNavBar extends StatelessWidget {
     required this.dotCount,
     required this.onTapNext,
     required this.positionStream,
+    required this.onTapSkip,
   });
 
-  final int currentIndex;
   final int dotCount;
   final Stream<int> positionStream;
 
   final VoidCallback onTapNext;
+  final VoidCallback onTapSkip;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class OnBoardingNavBar extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             TextButton(
-              onPressed: () {},
+              onPressed: onTapSkip,
               child: textOnb(text: "تخطي"),
             ),
             DotsIndicatorsWidget(
