@@ -6,24 +6,32 @@ import 'package:flutter/material.dart';
 class DotsIndicatorsWidget extends StatelessWidget {
   const DotsIndicatorsWidget({
     super.key,
-    required this.currentIndex,
-    required this.dotCount,
+    required this.dotCount, required this.positionStream,
   });
 
-  final int currentIndex;
   final int dotCount;
+  final Stream<int> positionStream;
+
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: .rtl,
-      child: DotsIndicator(
-        dotsCount: ConstListValues.onBoardingModel.length,
-        position: currentIndex.toDouble(),
-        decorator: DotsDecorator(
-          activeColor: ColorManager.whiteColor,
-          color: ColorManager.nonActiveIndicator,
-        ),
+      child: StreamBuilder(
+        stream: positionStream,
+        builder: (context, snapshot) {
+          return DotsIndicator(
+            dotsCount: ConstListValues.onBoardingModel.length,
+            position: (snapshot.data??0).toDouble(),
+            onTap: (position) {
+
+            },
+            decorator: DotsDecorator(
+              activeColor: ColorManager.whiteColor,
+              color: ColorManager.nonActiveIndicator,
+            ),
+          );
+        }
       ),
     );
   }

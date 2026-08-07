@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 import '../../../core/constant values/constant_values.dart';
 
 class OnBoardingBody extends StatelessWidget {
-  const OnBoardingBody({super.key});
+  const OnBoardingBody(
+      {super.key, required this._pageController, required this.onPageChanged});
+
+  final PageController _pageController;
+  final ValueChanged<int> onPageChanged;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: PageView.builder(
+        controller: _pageController,
         itemCount: ConstListValues.onBoardingModel.length,
-        itemBuilder: (BuildContext context, int index) => OnBoardingItems(
-          onBoardingModel: ConstListValues.onBoardingModel[index],
-        ),
+        onPageChanged:onPageChanged,
+        itemBuilder: (BuildContext context, int index) =>
+            OnBoardingItems(
+              onBoardingModel: ConstListValues.onBoardingModel[index],
+            ),
       ),
     );
   }

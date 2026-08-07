@@ -1,4 +1,3 @@
-import 'package:drosak_managment_app/core/numbers/padding_margin_manager.dart';
 import 'package:drosak_managment_app/core/resources/color_manager.dart';
 import 'package:drosak_managment_app/view/on_boarding/widgets/text_onb.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +7,16 @@ import '../widgets/dots_indicators.dart';
 class OnBoardingNavBar extends StatelessWidget {
   const OnBoardingNavBar({
     super.key,
-    required this.currentIndex,
     required this.dotCount,
+    required this.onTapNext,
+    required this.positionStream,
   });
 
   final int currentIndex;
   final int dotCount;
+  final Stream<int> positionStream;
+
+  final VoidCallback onTapNext;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +35,12 @@ class OnBoardingNavBar extends StatelessWidget {
               onPressed: () {},
               child: textOnb(text: "تخطي"),
             ),
-            DotsIndicatorsWidget(dotCount: dotCount, currentIndex: currentIndex),
+            DotsIndicatorsWidget(
+              dotCount: dotCount,
+              positionStream: positionStream,
+            ),
             TextButton(
-              onPressed: () {},
+              onPressed: onTapNext,
               child: textOnb(text: "التالي"),
             ),
           ],
