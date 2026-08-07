@@ -1,4 +1,5 @@
-import 'package:drosak_managment_app/core/resources/height_manager.dart';
+import 'package:drosak_managment_app/core/numbers/height_manager.dart';
+import 'package:drosak_managment_app/core/numbers/padding_margin_manager.dart';
 import 'package:drosak_managment_app/core/strings/font_manager.dart';
 import 'package:drosak_managment_app/model/on_boarding/on_boarding_model.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,16 @@ class OnBoardingItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: PaddingManager.p16),
       child: Column(
         spacing: HeightManager.h60,
         mainAxisAlignment: .center,
         crossAxisAlignment: .center,
         children: [
-          SvgPicture.asset(onBoardingModel.imagePath, height: 200),
+          SvgPicture.asset(
+            onBoardingModel.imagePath,
+            height: HeightManager.h200,
+          ),
           Text(
             onBoardingModel.title,
             textAlign: .center,

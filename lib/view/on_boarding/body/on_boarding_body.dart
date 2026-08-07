@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../core/constant values/constant_values.dart';
 
 class OnBoardingBody extends StatelessWidget {
-  const OnBoardingBody(
-      {super.key, required this._pageController, required this.onPageChanged});
+  const OnBoardingBody({
+    super.key,
+    required this._pageController,
+    required this.onPageChanged,
+  });
 
   final PageController _pageController;
   final ValueChanged<int> onPageChanged;
@@ -17,11 +20,10 @@ class OnBoardingBody extends StatelessWidget {
         child: PageView.builder(
           controller: _pageController,
           itemCount: ConstListValues.onBoardingModel.length,
-          onPageChanged:onPageChanged,
-          itemBuilder: (BuildContext context, int index) =>
-              OnBoardingItems(
-                onBoardingModel: ConstListValues.onBoardingModel[index],
-              ),
+          onPageChanged: onPageChanged,
+          itemBuilder: (BuildContext context, int index) => OnBoardingItems(
+            onBoardingModel: ConstListValues.onBoardingModel[index],
+          ),
         ),
       ),
     );

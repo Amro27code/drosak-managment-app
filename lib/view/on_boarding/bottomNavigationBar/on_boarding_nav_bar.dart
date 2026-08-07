@@ -1,7 +1,8 @@
 import 'package:drosak_managment_app/core/resources/color_manager.dart';
+import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:drosak_managment_app/view/on_boarding/widgets/text_onb.dart';
 import 'package:flutter/material.dart';
-import '../../../core/resources/height_manager.dart';
+import '../../../core/numbers/height_manager.dart';
 import '../widgets/dots_indicators.dart';
 
 class OnBoardingNavBar extends StatelessWidget {
@@ -34,7 +35,7 @@ class OnBoardingNavBar extends StatelessWidget {
           children: [
             TextButton(
               onPressed: onTapSkip,
-              child: textOnb(text: "تخطي"),
+              child: textOnb(text: StringManager.skip),
             ),
             DotsIndicatorsWidget(
               dotCount: dotCount,
@@ -42,7 +43,7 @@ class OnBoardingNavBar extends StatelessWidget {
             ),
             TextButton(
               onPressed: onTapNext,
-              child: textOnb(text: "التالي"),
+              child: textOnb(text: StringManager.next),
             ),
           ],
         ),

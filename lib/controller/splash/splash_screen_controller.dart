@@ -1,4 +1,3 @@
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/resources/routes_manager.dart';
@@ -21,7 +20,6 @@ class SplashScreenController {
     _animationController =
     AnimationController(vsync: _vsync, duration: Duration(seconds: 1))
       ..addStatusListener((status) {
-        print(status);
         if (status ==
             AnimationStatus.completed) /* OR =>   status.isCompleted */ {
           goToOnb();

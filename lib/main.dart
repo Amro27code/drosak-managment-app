@@ -9,8 +9,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String routeName = await checkWhichScreen();
-  print(routeName);
-
   runApp( MyApp(routeName: routeName));
 }
 
