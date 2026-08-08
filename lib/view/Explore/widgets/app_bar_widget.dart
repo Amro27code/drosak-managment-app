@@ -1,3 +1,4 @@
+import 'package:drosak_managment_app/core/numbers/font_size_manager.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/resources/color_manager.dart';
@@ -16,7 +17,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
           fontWeight: .w500,
           fontFamily: FontManager.geDinerOne,
-          fontSize: 20,
+          fontSize: FontSizeManager.s20,
           color: ColorManager.primary,
         ),
       ),
