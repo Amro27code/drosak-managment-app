@@ -1,3 +1,4 @@
+import 'package:drosak_managment_app/model/explore/explore_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/numbers/circle_radius_manager.dart';
@@ -7,9 +8,9 @@ import '../../../core/resources/color_manager.dart';
 import '../../../core/strings/font_manager.dart';
 
 class TitleInItemStack extends StatelessWidget {
-  const TitleInItemStack({
-    super.key,
-  });
+  const TitleInItemStack({super.key, required this._exploreModel});
+
+  final ExploreModel _exploreModel;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,8 @@ class TitleInItemStack extends StatelessWidget {
         color: ColorManager.primary,
       ),
       child: Text(
-        "المراحل التعليمية",
+        // "المراحل التعليمية",
+        _exploreModel.title,
         textAlign: .start,
         style: TextStyle(
           // backgroundColor: Colors.red,

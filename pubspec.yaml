@@ -73,6 +73,11 @@ flutter:
     - assets/images/on boarding/onb3.svg
     - assets/images/on boarding/onb4.svg
     - assets/images/on boarding/onb5.svg
+    - assets/images/bnb/bnb_icon1.svg
+    - assets/images/bnb/bnb_icon2.svg
+    - assets/images/bnb/bnb_icon3.svg
+    - assets/images/bnb/bnb_icon4.svg
+    - assets/images/bnb/bnb_icon5.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -28,6 +28,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: OnBoardingBody(
         pageController: _onBoardingController.pageController,
         onPageChanged: _onBoardingController.onPageChange,
