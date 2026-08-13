@@ -1,12 +1,8 @@
 import 'package:drosak_managment_app/controller/mainScreens/education_controller.dart';
-import 'package:drosak_managment_app/core/numbers/height_manager.dart';
-import 'package:drosak_managment_app/core/numbers/padding_margin_manager.dart';
-import 'package:drosak_managment_app/core/resources/widgets/space/vertical_space.dart';
-import 'package:drosak_managment_app/model/education/education_model.dart';
+import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../main/widget/custom_app_bar.dart';
 import '../body/education_body.dart';
-import '../widgets/item_biulder_education.dart';
 
 class Education extends StatefulWidget {
   const Education({super.key});
@@ -21,13 +17,19 @@ class _EducationState extends State<Education> {
   @override
   void initState() {
     super.initState();
-    _educationController = EducationController();
+    _educationController = EducationController(context: context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: CustomAppBar(),
+      resizeToAvoidBottomInset:false ,
+      appBar: CustomAppBar(
+        title: StringManager.bnb1,
+        onTapSearch: _educationController.onTapSearch,
+        onTapAdd: _educationController.onTapAdd,
+      ),
+
       body: EducationBody(educationList: _educationController.educationList),
     );
   }

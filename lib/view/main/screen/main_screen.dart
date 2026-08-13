@@ -31,11 +31,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     _mainScreenController.getArguments(context);
     return Scaffold(
-      appBar: CustomAppBar(
-
-        streamCurrentIndex: _mainScreenController.currentIndexBnbOutput,
-      ),
-
       body: StreamBuilder<int>(
         stream: _mainScreenController.currentIndexBnbOutput,
         builder: (context, snapshot) => MainScreenController
