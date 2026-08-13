@@ -18,7 +18,7 @@ class ContentGridItem extends StatelessWidget {
     return Container(
       width: WidthManager.w131,
       height: HeightManager.h106, //TODO: =================
-      padding:  const EdgeInsets.symmetric(horizontal: PaddingManager.p5, vertical: PaddingManager.p5),
+      padding:  EdgeInsets.symmetric(horizontal: PaddingManager.p5, vertical: PaddingManager.p5),
       decoration: BoxDecoration(
         color: ColorManager.black,
         borderRadius: BorderRadius.circular(CircleRadiusManager.r18),

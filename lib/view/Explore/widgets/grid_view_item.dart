@@ -33,12 +33,13 @@ class GridViewItem extends StatelessWidget {
       child: Stack(
         clipBehavior: .none,
         children: [
-          backPositionedItemInStack(),
+          backPositionedItemInStack(numBottomLeft: -16),
           ContentGridItem(exploreModel: _exploreModel),
-          buildPositionedInStack(color: ColorManager.black, num: 16),
+          buildPositionedInStack(color: ColorManager.black, numBottomLeft: -16,radius: 16),
           buildPositionedInStack(
             color: ColorManager.primary,
-            num: 10,
+            numBottomLeft: -10,
+            radius: 10,
             child: Text(
               "${index + 1}",
               style: TextStyle(

@@ -17,7 +17,7 @@ class TitleInItemStack extends StatelessWidget {
     return Container(
       // height: HeightManager.h25,
       // width: .infinity,
-      padding: const EdgeInsets.symmetric(horizontal: PaddingManager.p4),
+      padding: EdgeInsets.symmetric(horizontal: PaddingManager.p4),
       // margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       // alignment: .centerRight,
       decoration: BoxDecoration(

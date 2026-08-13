@@ -19,7 +19,7 @@ class ExploreBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: const EdgeInsets.symmetric(
+      padding:  EdgeInsets.symmetric(
         horizontal: PaddingManager.p30,
         vertical: PaddingManager.p24,
       ),

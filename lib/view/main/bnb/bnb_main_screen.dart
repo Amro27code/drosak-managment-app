@@ -31,7 +31,7 @@ class BnbMainScreen extends StatelessWidget {
           selectedItemColor: ColorManager.primary,
           backgroundColor: ColorManager.backgroundBnb,
           // currentIndex: currentIndex,
-          currentIndex: snapShot.data!,
+          currentIndex: snapShot.data??0,
           // currentIndex: snapShot.data == null ? currentIndex : snapShot.data!,
           onTap: onTap,
           items: [

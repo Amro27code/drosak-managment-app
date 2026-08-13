@@ -39,6 +39,7 @@ dependencies:
   flutter_svg: ^2.3.0
   flutter_screenutil: ^5.9.3
   dots_indicator: ^4.0.1
+  sqflite: ^2.4.3
 
 dev_dependencies:
   flutter_test:

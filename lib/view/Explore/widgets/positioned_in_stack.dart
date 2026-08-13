@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Positioned buildPositionedInStack({
-  required Color color,
-  required double num,
+   Color? color,
+   double? numBottomLeft,
+   double? numTopRight,
+  double? radius,
   Widget? child,
 }) {
   return Positioned(
-    bottom: -1 * num,
-    left: -1 * num,
-    child: CircleAvatar(radius: num, backgroundColor: color, child: child),
+    bottom:numBottomLeft?.h,
+    left: numBottomLeft?.w,
+
+    top: numTopRight?.h,
+    right: numTopRight?.w,
+
+    child: CircleAvatar(radius: (radius??0).r, backgroundColor: color, child: child),
   );
 }

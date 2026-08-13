@@ -14,19 +14,10 @@ import '../../core/resources/assets_manager.dart';
 class MainScreenController {
   static const List<BnbModel> bnbItems = [
     BnbModel(
-      imagePath: AssetsValueManager.bnb1,
-      title: StringManager.bnb1,
-      screen: Education(),
-    ),
-    BnbModel(
-      imagePath: AssetsValueManager.bnb2,
-      title: StringManager.bnb2,
-      screen: Group(),
-    ),
-    BnbModel(
-      imagePath: AssetsValueManager.bnb3,
-      title: StringManager.bnb3,
-      screen: Students(),
+      imagePath: AssetsValueManager.bnb5,
+
+      title: StringManager.bnb5,
+      screen: Attendance(),
     ),
     BnbModel(
       imagePath: AssetsValueManager.bnb4,
@@ -34,9 +25,20 @@ class MainScreenController {
       screen: Audience(),
     ),
     BnbModel(
-      imagePath: AssetsValueManager.bnb5,
-      title: StringManager.bnb5,
-      screen: Attendance(),
+      imagePath: AssetsValueManager.bnb3,
+      title: StringManager.bnb3,
+      screen: Students(),
+    ),
+    BnbModel(
+      imagePath: AssetsValueManager.bnb2,
+      title: StringManager.bnb2,
+      screen: Group(),
+    ),
+
+    BnbModel(
+      imagePath: AssetsValueManager.bnb1,
+      title: StringManager.bnb1,
+      screen: Education(),
     ),
   ];
   int currentIndex = 0;
@@ -49,7 +51,7 @@ class MainScreenController {
 
   MainScreenController() {
     initController();
-    // setCurrentIndex(index);
+    // getArguments(index);
   }
 
   void getArguments(BuildContext context) {

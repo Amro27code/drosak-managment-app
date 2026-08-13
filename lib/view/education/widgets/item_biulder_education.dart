@@ -1,0 +1,45 @@
+import 'package:drosak_managment_app/model/education/education_model.dart';
+import 'package:drosak_managment_app/view/education/widgets/stackItem.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/numbers/font_size_manager.dart';
+import '../../../core/resources/color_manager.dart';
+import '../../../core/strings/font_manager.dart';
+import '../../Explore/widgets/back_positioned_item_in_stack.dart';
+import '../../Explore/widgets/positioned_in_stack.dart';
+
+class ItemBuilderEducation extends StatelessWidget {
+  const ItemBuilderEducation({super.key, required this.educationModel});
+
+  final EducationModel educationModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: .none,
+      children: [
+        backPositionedItemInStack(numTopRight: -10),
+        StudyStageInStackWidget(educationModel: educationModel,),
+        buildPositionedInStack(
+          radius: 16,
+          color: ColorManager.black,
+          numTopRight: -10,
+        ),
+        buildPositionedInStack(
+          radius: 10,
+          color: ColorManager.primary,
+          numTopRight: -5,
+          child: Text(
+            "${educationModel.id}",
+            textAlign: .center,
+            style: .new(
+              color: Colors.white,
+              fontFamily: FontManager.geDinerOne,
+              fontSize: FontSizeManager.s12,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
