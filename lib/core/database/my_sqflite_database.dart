@@ -3,17 +3,21 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:path/path.dart' show join;
 
 class MySqfliteDatabase extends CRUD {
-
+  final String _eduTable = "Education";
+  final String _eduIdColumn = "educationId";
+  final String _eduTitleColumn = "educationTitle";
+  final String _eduSubTitleColumn = "educationSubtitle";
+  final String _eduImageColumn = "educationImagePath";
 
   sqflite.Database? _database;
 
   Future<sqflite.Database> initDatabase() async {
     String path = await sqflite.getDatabasesPath();
 
-    String managementDatabaseName = "management.db";
-    String myPath = join(path, managementDatabaseName);
+    String drosakDatabaseName = "drosak.db";
+    String myPath = join(path, drosakDatabaseName);
 
-    int version = 2;
+    int version = 1;
     _database ??= await sqflite.openDatabase(
       myPath,
       version: version,
@@ -29,11 +33,14 @@ class MySqfliteDatabase extends CRUD {
   }
 
   Future<void> _onCreate(sqflite.Database db, int version) async {
-    // await db.execute(
-    //   "CREATE TABLE IF NOT EXISTS $_userTable"
-    //   " ($_userIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
-    //   "$_userNameColumn TEXT);",
-    // );
+    await db.execute(
+      "CREATE TABLE IF NOT EXISTS $_eduTable"
+      " ($_eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "$_eduTitleColumn TEXT,"
+      "$_eduSubTitleColumn TEXT,"
+      "$_eduImageColumn TEXT"
+      ");",
+    );
     // await db.execute(
     //   "CREATE TABLE IF NOT EXISTS $_productTable ($_productIdColumn INTEGER PRIMARY KEY AUTOINCREMENT ,$_productNameColumn TEXT,$_productPriceColumn REAL,$_productCountColumn INTEGER);",
     // );
@@ -57,8 +64,6 @@ class MySqfliteDatabase extends CRUD {
 
     return deleted == 0 ? false : true;
   }
-
-
 
   @override
   Future<bool> insert({
