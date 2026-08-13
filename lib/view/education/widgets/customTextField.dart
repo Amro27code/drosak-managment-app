@@ -10,12 +10,14 @@ Expanded customTextField({
   required String? hintText,
   required TextEditingController controller,
   required ValueChanged<String> onSubmitted,
+  int maxLines=1
 }) {
   return Expanded(
     child: TextField(
       controller: controller,
       textAlign: .right,
       onSubmitted: onSubmitted,
+      maxLines: maxLines,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,

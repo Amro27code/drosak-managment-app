@@ -1,13 +1,14 @@
 import 'package:drosak_managment_app/core/database/crud.dart';
+import 'package:drosak_managment_app/model/education/education_model.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:path/path.dart' show join;
 
 class MySqfliteDatabase extends CRUD {
-  final String _eduTable = "Education";
-  final String _eduIdColumn = "educationId";
-  final String _eduTitleColumn = "educationTitle";
-  final String _eduSubTitleColumn = "educationSubtitle";
-  final String _eduImageColumn = "educationImagePath";
+  static const String eduTable = "Education";
+  static const String eduIdColumn = "educationId";
+  static const String eduTitleColumn = "educationTitle";
+  static const String eduSubTitleColumn = "educationSubtitle";
+  static const String eduImageColumn = "educationImagePath";
 
   sqflite.Database? _database;
 
@@ -34,11 +35,11 @@ class MySqfliteDatabase extends CRUD {
 
   Future<void> _onCreate(sqflite.Database db, int version) async {
     await db.execute(
-      "CREATE TABLE IF NOT EXISTS $_eduTable"
-      " ($_eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
-      "$_eduTitleColumn TEXT,"
-      "$_eduSubTitleColumn TEXT,"
-      "$_eduImageColumn TEXT"
+      "CREATE TABLE IF NOT EXISTS $eduTable"
+      " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "$eduTitleColumn TEXT,"
+      "$eduSubTitleColumn TEXT,"
+      "$eduImageColumn TEXT"
       ");",
     );
     // await db.execute(
@@ -71,8 +72,10 @@ class MySqfliteDatabase extends CRUD {
     required String tableName,
   }) async {
     await initDatabase();
-
+print("After initDataBase-------");
     int inserted = await _database!.insert(tableName, values);
+    print("After insertDataBase-------");
+
     await _database!.close();
     return inserted == 0 ? false : true;
   }
