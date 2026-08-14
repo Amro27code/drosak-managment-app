@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:drosak_managment_app/core/database/education_db.dart';
 import 'package:drosak_managment_app/core/resources/assets_manager.dart';
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:drosak_managment_app/model/education/education_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../view/education/widgets/add_education_sheet_widget.dart';
 
@@ -10,39 +13,42 @@ class EducationController {
   final BuildContext context;
   late List<EducationModel> educationList = [];
 
-  // [
-  //   EducationModel(
-  //     id: 1,
-  //     imagePath: AssetsValueManager.onb3,
-  //     title: "الصف الأول الإعدادي",
-  //     subtitle:
-  //         "تلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلا",
-  //   ),
-  //   EducationModel(
-  //     id: 2,
-  //     imagePath: AssetsValueManager.onb3,
-  //     title: "الصف الثاني الإعدادي",
-  //     subtitle:
-  //         "تلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلا",
-  //   ),
-  // ];
-  // late List<Map<String, Object?>> educationListItems = [];
+  String? pathImagePicker;
   late TextEditingController _nameTextEditingController;
   late TextEditingController _descTextEditingController;
   late EducationOperations educationOperations;
+
+  late StreamController<List<EducationModel>> _listEducationStreamController;
+  late Sink<List<EducationModel>> _listEducationInputController;
+  late Stream<List<EducationModel>> listEducationOutputController;
 
   EducationController({
     required this.context,
     required this.educationOperations,
   }) {
-    initController();
+    init();
   }
 
-  Future<void> initController() async {
+  void initControllers() {
+    _listEducationStreamController = StreamController();
+    _listEducationInputController = _listEducationStreamController.sink;
+    listEducationOutputController = _listEducationStreamController.stream;
+    _listEducationInputController.add(educationList);
+  }
+
+  void initDispose() {
+    _listEducationStreamController.close();
+    _listEducationInputController.close();
+  }
+
+  Future<void> init() async {
+    initControllers();
     _nameTextEditingController = TextEditingController();
     _descTextEditingController = TextEditingController();
     educationOperations = EducationOperations();
-    await getAllEducations();
+
+    educationList = await educationOperations.selectAllEducations();
+    // await getAllEducations();
     print(educationList);
   }
 
@@ -54,10 +60,32 @@ class EducationController {
       controller: _nameTextEditingController,
       textInButton: StringManager.add,
       onTapAddInSheet: addNewEducation,
+      pathImage: pathImagePicker,
       descController: _descTextEditingController,
       hintTextDesc: StringManager.addBnb1Desc,
       onSubmittedDesc: (value) {},
+      pickImageMethod: pickImageFromGallery,
     );
+  }
+
+  Future<void> pickImageMethod() async {
+    final picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+    print("ffffffffffffffffffffffffffff");
+    print(image?.path);
+    print(image);
+  }
+
+  Future<void> pickImageFromGallery() async {
+    final picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) pathImagePicker = image.path;
+  }
+
+  Future<void> pickImageFromCamera() async {
+    final picker = ImagePicker();
+    final XFile? photo = await picker.pickImage(source: ImageSource.camera);
   }
 
   void onSubmittedAddEducation(String value) {}
@@ -68,11 +96,15 @@ class EducationController {
       EducationModel(
         title: _nameTextEditingController.text,
         subtitle: _descTextEditingController.text,
-        imagePath: AssetsValueManager.onb3,
+        imagePath: pathImagePicker == null ? "" : pathImagePicker!,
         id: 0,
       ),
     );
-    print(inserted);
+    // print(inserted);
+
+    // listEducationInputController.add(educationList);
+    getAllEducations();
+
     // Navigator.of(context).pop();
   }
 
@@ -81,7 +113,7 @@ class EducationController {
 
     educationList = await educationOperations.selectAllEducations();
     // educationListItems = items;
-    // Navigator.of(context).pop();
+    _listEducationInputController.add(educationList);
   }
 
   void onTapSearch() {}

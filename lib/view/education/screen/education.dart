@@ -32,10 +32,10 @@ class _EducationState extends State<Education> {
         title: StringManager.bnb1,
         onTapSearch: _educationController.onTapSearch,
         onTapAdd: _educationController.onTapAdd,
-
       ),
 
       body: EducationBody(
+        stream: _educationController.listEducationOutputController,
         futureFunction: _educationController.getAllEducations(),
         educationList: _educationController.educationList,
       ),

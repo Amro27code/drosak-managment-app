@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:drosak_managment_app/core/numbers/height_manager.dart';
+import 'package:drosak_managment_app/core/numbers/width_manager.dart';
 import 'package:drosak_managment_app/view/education/widgets/customTextField.dart';
 import 'package:flutter/material.dart';
 import '../../../core/numbers/circle_radius_manager.dart';
@@ -19,6 +22,8 @@ void addEducationSheetWidget({
   required ValueChanged<String> onSubmittedDesc,
   required VoidCallback onTapAddInSheet,
   required String textInButton,
+  required VoidCallback pickImageMethod,
+  required String? pathImage,
 }) {
   showModalBottomSheet(
     context: context,
@@ -29,46 +34,82 @@ void addEducationSheetWidget({
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: Container(
-          constraints: BoxConstraints(maxHeight:HeightManager.h350 ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(CircleRadiusManager.r30),
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(maxHeight: HeightManager.h550),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(CircleRadiusManager.r30),
+              ),
             ),
-          ),
-          padding: EdgeInsets.all(PaddingManager.p30),
-          child: Column(
-            mainAxisAlignment: .center,
-            mainAxisSize: .min,
-            crossAxisAlignment: .center,
-            children: [
-              Row(
-                children: [
-                  addImageButton(),
-                  horizontalSpace(width: 10),
+            padding: EdgeInsets.all(PaddingManager.p30),
+            child: Column(
+              // mainAxisAlignment: .center,
+              mainAxisSize: .min,
+              // crossAxisAlignment: .center,
+              children: [
+                Row(
+                  children: [
+                    addImageButton(pickImageMethod: pickImageMethod),
+                    horizontalSpace(width: 10),
+                    customTextField(
+                      controller: controller,
 
-                  customTextField(
-                    controller: controller,
-                    hintText: hintText,
-                    onSubmitted: onSubmitted,
+                      hintText: hintText,
+                      onSubmitted: onSubmitted,
+                    ),
+                  ],
+                ),
+                verticalSpace(height: 12),
+                customTextField(
+                  controller: descController,
+                  hintText: hintTextDesc,
+                  onSubmitted: onSubmittedDesc,
+                  maxLines: 3,
+                ),
+                verticalSpace(height: 40),
+
+                if (pathImage != null)
+                  Column(
+                    children: [
+                      Stack(
+                        children: [
+                          Image.file(
+                            File(pathImage!),
+                            errorBuilder: (context, error, stackTrace) => Text(
+                              "Not Found",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            // width: WidthManager.w32,
+                            height: HeightManager.h200,
+                            width: .infinity,
+                            fit: .cover,
+                          ),
+                          Positioned(
+                            child: IconButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.black45,
+                              ),
+                              onPressed: () {
+                                pathImage = null;
+                              },
+                              icon: Icon(Icons.delete, color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                      verticalSpace(height: 15),
+                    ],
                   ),
-                ],
-              ),
-              verticalSpace(height: 12),
-              customTextField(
-                controller: descController,
-                hintText: hintTextDesc,
-                onSubmitted: onSubmittedDesc,
-                maxLines: 3,
-              ),
-              verticalSpace(height: 40),
-              customAddButton(
-                onTapAddInSheet: onTapAddInSheet,
-                textInButton: textInButton,
-              ),
-            ],
+
+                customAddButton(
+                  onTapAddInSheet: onTapAddInSheet,
+                  textInButton: textInButton,
+                ),
+              ],
+            ),
+            // ),
           ),
-          // ),
         ),
       );
     },

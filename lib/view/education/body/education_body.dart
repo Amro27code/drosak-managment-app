@@ -1,3 +1,5 @@
+import 'package:drosak_managment_app/core/resources/color_manager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/numbers/height_manager.dart';
@@ -11,33 +13,50 @@ class EducationBody extends StatelessWidget {
     super.key,
     required this._educationList,
     required this.futureFunction,
+    required this.stream,
   });
 
   final List<EducationModel> _educationList;
   final Future<void> futureFunction;
+  final Stream<List<EducationModel>> stream;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: futureFunction,
+    return
+    //   FutureBuilder(
+    //   future: futureFunction,
+    //   builder: (context, snapShot) {
+    //     if (snapShot.connectionState == ConnectionState.waiting ||
+    //         snapShot.connectionState == ConnectionState.none) {
+    //       return CircularProgressIndicator();
+    //     } else if (snapShot.connectionState == ConnectionState.done) {
+    //       return ;
+    //     }
+    //     else return CircularProgressIndicator();
+    //   },
+    // );
+    StreamBuilder(
+      stream: stream,
       builder: (context, snapShot) {
-        if (snapShot.connectionState == ConnectionState.waiting ||
-            snapShot.connectionState == ConnectionState.none) {
-          return CircularProgressIndicator();
-        } else if (snapShot.connectionState == ConnectionState.done) {
-          return ListView.separated(
-            padding: EdgeInsets.symmetric(
-              horizontal: PaddingManager.p16,
-              vertical: PaddingManager.p18,
-            ),
-            itemCount: _educationList.length,
-            separatorBuilder: (context, index) =>
-                verticalSpace(height: HeightManager.h16),
-            itemBuilder: (context, index) =>
-                ItemBuilderEducation(educationModel: _educationList[index]),
-          );
-        }
-        else return CircularProgressIndicator();
+        return snapShot.connectionState == ConnectionState.waiting
+            ? Center(
+                child: CupertinoActivityIndicator(
+                  radius: 20,
+                  color: ColorManager.primary,
+                ),
+              )
+            : ListView.separated(
+                padding: EdgeInsets.symmetric(
+                  horizontal: PaddingManager.p16,
+                  vertical: PaddingManager.p18,
+                ),
+                itemCount:
+                    (snapShot.data ?? []).length, //_educationList.length,
+                separatorBuilder: (context, index) =>
+                    verticalSpace(height: HeightManager.h16),
+                itemBuilder: (context, index) =>
+                    ItemBuilderEducation(educationModel: snapShot.data![index]),
+              );
       },
     );
   }

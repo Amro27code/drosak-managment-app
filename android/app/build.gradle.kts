@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.drosak_managment_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = flutter.compileSdkVersion//34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

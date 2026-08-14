@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import '../../model/education/education_model.dart';
 import 'my_sqflite_database.dart';
 

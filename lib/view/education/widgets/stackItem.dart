@@ -1,6 +1,9 @@
+import 'dart:io';
+
+import 'package:drosak_managment_app/core/resources/assets_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/numbers/circle_radius_manager.dart';
 import '../../../core/numbers/font_size_manager.dart';
@@ -12,7 +15,7 @@ import '../../../core/strings/font_manager.dart';
 import '../../../model/education/education_model.dart';
 
 class StudyStageInStackWidget extends StatelessWidget {
-  const StudyStageInStackWidget({super.key,required this.educationModel});
+  const StudyStageInStackWidget({super.key, required this.educationModel});
 
   final EducationModel educationModel;
 
@@ -43,9 +46,29 @@ class StudyStageInStackWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: .center,
         children: [
-          CircleAvatar(
-            radius: 32.r,
-            child: SvgPicture.asset(educationModel.imagePath),
+          // CircleAvatar( //or replace with ClipRRect
+          //   radius: 32.r,
+          //   backgroundColor: Colors.transparent,
+          //   child: Image.file(
+          //     File(educationModel.imagePath),
+          //     errorBuilder: (context, error, stackTrace) =>
+          //         SvgPicture.asset(AssetsValueManager.bnb3,),
+          //     // height: 64.h,
+          //     // width: 64.w,
+          //   ),),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(CircleRadiusManager.r50),
+            child: Image.file(
+              File(educationModel.imagePath),
+              height: HeightManager.h64,
+              fit: .cover,
+              width: WidthManager.w64,
+              errorBuilder: (context, error, stackTrace) => SvgPicture.asset(
+                AssetsValueManager.bnb3,
+                height:HeightManager.h64,
+                width: WidthManager.w64,
+              ),
+            ),
           ),
           Expanded(
             child: Column(
