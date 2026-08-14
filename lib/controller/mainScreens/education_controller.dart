@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:drosak_managment_app/core/database/education_db.dart';
-import 'package:drosak_managment_app/core/resources/assets_manager.dart';
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:drosak_managment_app/model/education/education_model.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +21,10 @@ class EducationController {
   late Sink<List<EducationModel>> _listEducationInputController;
   late Stream<List<EducationModel>> listEducationOutputController;
 
+  late StreamController<String?> _imageStreamController;
+  late Sink<String?> _imageInputController;
+  late Stream<String?> imageOutputController;
+
   EducationController({
     required this.context,
     required this.educationOperations,
@@ -33,10 +36,19 @@ class EducationController {
     _listEducationStreamController = StreamController();
     _listEducationInputController = _listEducationStreamController.sink;
     listEducationOutputController = _listEducationStreamController.stream;
+
+    _imageStreamController = StreamController();
+    _imageInputController = _imageStreamController.sink;
+    imageOutputController = _imageStreamController.stream;
+
+    _imageInputController.add(pathImagePicker);
     _listEducationInputController.add(educationList);
   }
 
   void initDispose() {
+    _listEducationStreamController.close();
+    _listEducationInputController.close();
+
     _listEducationStreamController.close();
     _listEducationInputController.close();
   }
@@ -60,7 +72,8 @@ class EducationController {
       controller: _nameTextEditingController,
       textInButton: StringManager.add,
       onTapAddInSheet: addNewEducation,
-      pathImage: pathImagePicker,
+      ImageStream: imageOutputController,
+      onDeleteImage: onDeleteImage,
       descController: _descTextEditingController,
       hintTextDesc: StringManager.addBnb1Desc,
       onSubmittedDesc: (value) {},
@@ -68,19 +81,22 @@ class EducationController {
     );
   }
 
+  void onDeleteImage() {
+    pathImagePicker = null;
+    _imageInputController.add(pathImagePicker);
+  }
+
   Future<void> pickImageMethod() async {
-    final picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    final XFile? photo = await picker.pickImage(source: ImageSource.camera);
-    print("ffffffffffffffffffffffffffff");
-    print(image?.path);
-    print(image);
+    // final picker = ImagePicker();
+    // final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    // final XFile? photo = await picker.pickImage(source: ImageSource.camera);
   }
 
   Future<void> pickImageFromGallery() async {
     final picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) pathImagePicker = image.path;
+    _imageInputController.add(pathImagePicker);
   }
 
   Future<void> pickImageFromCamera() async {

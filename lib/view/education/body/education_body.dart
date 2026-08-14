@@ -51,11 +51,14 @@ class EducationBody extends StatelessWidget {
                   vertical: PaddingManager.p18,
                 ),
                 itemCount:
-                    (snapShot.data ?? []).length, //_educationList.length,
+                    (snapShot.data ?? []).length + 1, //_educationList.length,
                 separatorBuilder: (context, index) =>
                     verticalSpace(height: HeightManager.h16),
-                itemBuilder: (context, index) =>
-                    ItemBuilderEducation(educationModel: snapShot.data![index]),
+                itemBuilder: (context, index) => snapShot.data!.length == index
+                    ? verticalSpace(height: 40)
+                    : ItemBuilderEducation(
+                        educationModel: snapShot.data![index],
+                      ),
               );
       },
     );

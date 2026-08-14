@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:drosak_managment_app/core/numbers/height_manager.dart';
-import 'package:drosak_managment_app/core/numbers/width_manager.dart';
 import 'package:drosak_managment_app/view/education/widgets/customTextField.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../core/numbers/circle_radius_manager.dart';
 import '../../../core/numbers/padding_margin_manager.dart';
@@ -20,10 +20,11 @@ void addEducationSheetWidget({
   required TextEditingController descController,
   required ValueChanged<String> onSubmitted,
   required ValueChanged<String> onSubmittedDesc,
+  required VoidCallback onDeleteImage,
   required VoidCallback onTapAddInSheet,
   required String textInButton,
   required VoidCallback pickImageMethod,
-  required String? pathImage,
+  required Stream<String?> ImageStream,
 }) {
   showModalBottomSheet(
     context: context,
@@ -54,7 +55,6 @@ void addEducationSheetWidget({
                     horizontalSpace(width: 10),
                     customTextField(
                       controller: controller,
-
                       hintText: hintText,
                       onSubmitted: onSubmitted,
                     ),
@@ -69,38 +69,51 @@ void addEducationSheetWidget({
                 ),
                 verticalSpace(height: 40),
 
-                if (pathImage != null)
-                  Column(
-                    children: [
-                      Stack(
+                StreamBuilder(
+                  stream: ImageStream,
+                  builder: (context, snapShot) {
+                    if (snapShot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CupertinoActivityIndicator(radius: 20),
+                      );
+                    }
+                    else if(snapShot.data==null){return SizedBox();}
+                    else if (snapShot.data != null) {
+                      return Column(
                         children: [
-                          Image.file(
-                            File(pathImage!),
-                            errorBuilder: (context, error, stackTrace) => Text(
-                              "Not Found",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            // width: WidthManager.w32,
-                            height: HeightManager.h200,
-                            width: .infinity,
-                            fit: .cover,
-                          ),
-                          Positioned(
-                            child: IconButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.black45,
+                          Stack(
+                            children: [
+                              Image.file(
+                                File(snapShot.data!),
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Text(
+                                      "Not Found",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                // width: WidthManager.w32,
+                                height: HeightManager.h200,
+                                width: .infinity,
+                                fit: .cover,
                               ),
-                              onPressed: () {
-                                pathImage = null;
-                              },
-                              icon: Icon(Icons.delete, color: Colors.red),
-                            ),
+                              // if (snapShot.data != null)
+                                Positioned(
+                                  child: IconButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.black45,
+                                    ),
+                                    onPressed: onDeleteImage,
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                  ),
+                                ),
+                            ],
                           ),
+                          verticalSpace(height: 15),
                         ],
-                      ),
-                      verticalSpace(height: 15),
-                    ],
-                  ),
+                      );
+                    }
+                    else {return SizedBox();}
+                  },
+                ),
 
                 customAddButton(
                   onTapAddInSheet: onTapAddInSheet,

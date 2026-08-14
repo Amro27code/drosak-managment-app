@@ -25,6 +25,12 @@ class _EducationState extends State<Education> {
   }
 
   @override
+  void dispose() {
+    _educationController.initDispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
