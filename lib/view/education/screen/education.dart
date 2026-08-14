@@ -32,9 +32,13 @@ class _EducationState extends State<Education> {
         title: StringManager.bnb1,
         onTapSearch: _educationController.onTapSearch,
         onTapAdd: _educationController.onTapAdd,
+
       ),
 
-      body: EducationBody(educationList: _educationController.educationList),
+      body: EducationBody(
+        futureFunction: _educationController.getAllEducations(),
+        educationList: _educationController.educationList,
+      ),
     );
   }
 }

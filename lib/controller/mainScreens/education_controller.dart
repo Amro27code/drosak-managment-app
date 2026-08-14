@@ -8,23 +8,25 @@ import '../../view/education/widgets/add_education_sheet_widget.dart';
 
 class EducationController {
   final BuildContext context;
-  late List<EducationModel> educationList = [
-    EducationModel(
-      id: 1,
-      imagePath: AssetsValueManager.onb3,
-      title: "الصف الأول الإعدادي",
-      subtitle:
-          "تلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلا",
-    ),
-    EducationModel(
-      id: 2,
-      imagePath: AssetsValueManager.onb3,
-      title: "الصف الثاني الإعدادي",
-      subtitle:
-          "تلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلا",
-    ),
-  ];
-  late List<Map<String, Object?>> educationListItems = [];
+  late List<EducationModel> educationList = [];
+
+  // [
+  //   EducationModel(
+  //     id: 1,
+  //     imagePath: AssetsValueManager.onb3,
+  //     title: "الصف الأول الإعدادي",
+  //     subtitle:
+  //         "تلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلا",
+  //   ),
+  //   EducationModel(
+  //     id: 2,
+  //     imagePath: AssetsValueManager.onb3,
+  //     title: "الصف الثاني الإعدادي",
+  //     subtitle:
+  //         "تلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلاتلك الصف هو الصف الاعدادي وفي ثلاث طلاب مثلا",
+  //   ),
+  // ];
+  // late List<Map<String, Object?>> educationListItems = [];
   late TextEditingController _nameTextEditingController;
   late TextEditingController _descTextEditingController;
   late EducationOperations educationOperations;
@@ -39,9 +41,9 @@ class EducationController {
   Future<void> initController() async {
     _nameTextEditingController = TextEditingController();
     _descTextEditingController = TextEditingController();
-    educationOperations=EducationOperations();
+    educationOperations = EducationOperations();
     await getAllEducations();
-    print(educationListItems);
+    print(educationList);
   }
 
   void onTapAdd() {
@@ -61,7 +63,7 @@ class EducationController {
   void onSubmittedAddEducation(String value) {}
 
   Future<void> addNewEducation() async {
-    EducationOperations educationOperations=EducationOperations();
+    EducationOperations educationOperations = EducationOperations();
     bool inserted = await educationOperations.insertEducation(
       EducationModel(
         title: _nameTextEditingController.text,
@@ -75,11 +77,10 @@ class EducationController {
   }
 
   Future<void> getAllEducations() async {
-    EducationOperations educationOperations=EducationOperations();
+    EducationOperations educationOperations = EducationOperations();
 
-    List<Map<String, Object?>> items = await educationOperations
-        .selectAllEducations();
-    educationListItems = items;
+    educationList = await educationOperations.selectAllEducations();
+    // educationListItems = items;
     // Navigator.of(context).pop();
   }
 

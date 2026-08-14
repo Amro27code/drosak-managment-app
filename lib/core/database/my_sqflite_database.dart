@@ -1,5 +1,4 @@
 import 'package:drosak_managment_app/core/database/crud.dart';
-import 'package:drosak_managment_app/model/education/education_model.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:path/path.dart' show join;
 
