@@ -1,7 +1,7 @@
 import '../../core/database/my_sqflite_database.dart';
 
 class EducationModel {
-  final String _imagePath;
+  final String? _imagePath;
   final int _id;
 
   final String _title;
@@ -40,7 +40,7 @@ class EducationModel {
 
   int get id => _id;
 
-  String get imagePath => _imagePath;
+  String? get imagePath => _imagePath;
 
   String get subtitle => _subtitle;
 }

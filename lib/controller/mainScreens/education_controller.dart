@@ -39,13 +39,16 @@ class EducationController {
 
     _imageStreamController = StreamController();
     _imageInputController = _imageStreamController.sink;
-    imageOutputController = _imageStreamController.stream;
+    imageOutputController = _imageStreamController.stream.asBroadcastStream();
 
     _imageInputController.add(pathImagePicker);
     _listEducationInputController.add(educationList);
   }
 
   void initDispose() {
+    _nameTextEditingController.dispose();
+    _descTextEditingController.dispose();
+
     _listEducationStreamController.close();
     _listEducationInputController.close();
 
@@ -69,10 +72,29 @@ class EducationController {
       context: context,
       onSubmitted: onSubmittedAddEducation,
       hintText: StringManager.addBnb1Name,
-      controller: _nameTextEditingController,
+      nameController: _nameTextEditingController,
       textInButton: StringManager.add,
-      onTapAddInSheet: addNewEducation,
-      ImageStream: imageOutputController,
+      onTapAddInSheet: () async {
+        bool inserted = await addNewEducation();
+        if (inserted) {
+          Navigator.pop(context);
+          educationList.add(
+            EducationModel(
+              imagePath: pathImagePicker, //== null ? "" : pathImagePicker!,
+              title: _nameTextEditingController.text,
+              subtitle: _descTextEditingController.text,
+              id: educationList.length + 1,
+            ),
+          );
+          _listEducationInputController.add(educationList);
+
+          _nameTextEditingController.clear();
+          _descTextEditingController.clear();
+          pathImagePicker = null;
+          _imageInputController.add(pathImagePicker);
+        }
+      },
+      imageStream: imageOutputController,
       onDeleteImage: onDeleteImage,
       descController: _descTextEditingController,
       hintTextDesc: StringManager.addBnb1Desc,
@@ -106,7 +128,7 @@ class EducationController {
 
   void onSubmittedAddEducation(String value) {}
 
-  Future<void> addNewEducation() async {
+  Future<bool> addNewEducation() async {
     EducationOperations educationOperations = EducationOperations();
     bool inserted = await educationOperations.insertEducation(
       EducationModel(
@@ -116,11 +138,9 @@ class EducationController {
         id: 0,
       ),
     );
-    // print(inserted);
-
     // listEducationInputController.add(educationList);
     getAllEducations();
-
+    return inserted;
     // Navigator.of(context).pop();
   }
 

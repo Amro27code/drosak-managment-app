@@ -16,7 +16,7 @@ void addEducationSheetWidget({
   required BuildContext context,
   required String? hintText,
   required String? hintTextDesc,
-  required TextEditingController controller,
+  required TextEditingController nameController,
   required TextEditingController descController,
   required ValueChanged<String> onSubmitted,
   required ValueChanged<String> onSubmittedDesc,
@@ -24,13 +24,14 @@ void addEducationSheetWidget({
   required VoidCallback onTapAddInSheet,
   required String textInButton,
   required VoidCallback pickImageMethod,
-  required Stream<String?> ImageStream,
+  required Stream<String?> imageStream,
 }) {
   showModalBottomSheet(
     context: context,
     backgroundColor: ColorManager.black,
     isScrollControlled: true,
     builder: (context) {
+
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -54,7 +55,7 @@ void addEducationSheetWidget({
                     addImageButton(pickImageMethod: pickImageMethod),
                     horizontalSpace(width: 10),
                     customTextField(
-                      controller: controller,
+                      controller: nameController,
                       hintText: hintText,
                       onSubmitted: onSubmitted,
                     ),
@@ -70,7 +71,7 @@ void addEducationSheetWidget({
                 verticalSpace(height: 40),
 
                 StreamBuilder(
-                  stream: ImageStream,
+                  stream: imageStream,
                   builder: (context, snapShot) {
                     if (snapShot.connectionState == ConnectionState.waiting) {
                       return Center(
