@@ -1,9 +1,7 @@
 import 'package:drosak_managment_app/controller/main/main_screen_controller.dart';
-import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:flutter/material.dart';
 
 import '../bnb/bnb_main_screen.dart';
-import '../widget/custom_app_bar.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

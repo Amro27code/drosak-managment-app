@@ -1,4 +1,3 @@
-import 'package:drosak_managment_app/controller/main/main_screen_controller.dart';
 import 'package:drosak_managment_app/core/resources/routes_manager.dart';
 import 'package:flutter/material.dart';
 

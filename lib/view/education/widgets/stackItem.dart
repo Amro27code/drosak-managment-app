@@ -58,17 +58,24 @@ class StudyStageInStackWidget extends StatelessWidget {
           //   ),),
           ClipRRect(
             borderRadius: BorderRadius.circular(CircleRadiusManager.r50),
-            child: Image.file(
-              File(educationModel.imagePath),
-              height: HeightManager.h64,
-              fit: .cover,
-              width: WidthManager.w64,
-              errorBuilder: (context, error, stackTrace) => SvgPicture.asset(
-                AssetsValueManager.bnb3,
-                height:HeightManager.h64,
-                width: WidthManager.w64,
-              ),
-            ),
+            child: educationModel.imagePath == null
+                ? SvgPicture.asset(
+                    AssetsValueManager.bnb3,
+                    height: HeightManager.h64,
+                    width: WidthManager.w64,
+                  )
+                : Image.file(
+                    File(educationModel.imagePath!),
+                    height: HeightManager.h64,
+                    fit: .cover,
+                    width: WidthManager.w64,
+                    errorBuilder: (context, error, stackTrace) =>
+                        SvgPicture.asset(
+                          AssetsValueManager.bnb3,
+                          height: HeightManager.h64,
+                          width: WidthManager.w64,
+                        ),
+                  ),
           ),
           Expanded(
             child: Column(

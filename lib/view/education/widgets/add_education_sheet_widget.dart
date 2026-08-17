@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:drosak_managment_app/core/numbers/height_manager.dart';
 import 'package:drosak_managment_app/view/education/widgets/customTextField.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,106 +23,120 @@ void addEducationSheetWidget({
   required VoidCallback onTapAddInSheet,
   required String textInButton,
   required VoidCallback pickImageMethod,
+  // required Future<void> Function() pickImageMethod,
   required Stream<String?> imageStream,
+  required GlobalKey<FormState> formKey,
 }) {
   showModalBottomSheet(
     context: context,
     backgroundColor: ColorManager.black,
     isScrollControlled: true,
     builder: (context) {
-
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: SingleChildScrollView(
-          child: Container(
-            constraints: BoxConstraints(maxHeight: HeightManager.h550),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(CircleRadiusManager.r30),
-              ),
+        child: Container(
+          constraints: BoxConstraints(maxHeight: HeightManager.h550),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(CircleRadiusManager.r30),
             ),
-            padding: EdgeInsets.all(PaddingManager.p30),
-            child: Column(
-              // mainAxisAlignment: .center,
-              mainAxisSize: .min,
-              // crossAxisAlignment: .center,
-              children: [
-                Row(
-                  children: [
-                    addImageButton(pickImageMethod: pickImageMethod),
-                    horizontalSpace(width: 10),
-                    customTextField(
-                      controller: nameController,
-                      hintText: hintText,
-                      onSubmitted: onSubmitted,
-                    ),
-                  ],
-                ),
-                verticalSpace(height: 12),
-                customTextField(
-                  controller: descController,
-                  hintText: hintTextDesc,
-                  onSubmitted: onSubmittedDesc,
-                  maxLines: 3,
-                ),
-                verticalSpace(height: 40),
-
-                StreamBuilder(
-                  stream: imageStream,
-                  builder: (context, snapShot) {
-                    if (snapShot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CupertinoActivityIndicator(radius: 20),
-                      );
-                    }
-                    else if(snapShot.data==null){return SizedBox();}
-                    else if (snapShot.data != null) {
-                      return Column(
-                        children: [
-                          Stack(
-                            children: [
-                              Image.file(
-                                File(snapShot.data!),
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Text(
-                                      "Not Found",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                // width: WidthManager.w32,
-                                height: HeightManager.h200,
-                                width: .infinity,
-                                fit: .cover,
-                              ),
-                              // if (snapShot.data != null)
-                                Positioned(
-                                  child: IconButton(
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Colors.black45,
-                                    ),
-                                    onPressed: onDeleteImage,
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          verticalSpace(height: 15),
-                        ],
-                      );
-                    }
-                    else {return SizedBox();}
-                  },
-                ),
-
-                customAddButton(
-                  onTapAddInSheet: onTapAddInSheet,
-                  textInButton: textInButton,
-                ),
-              ],
-            ),
-            // ),
           ),
+          padding: EdgeInsets.all(PaddingManager.p30),
+          child: Column(
+            // mainAxisAlignment: .center,
+            mainAxisSize: .min,
+            // crossAxisAlignment: .center,
+            children: [
+              Row(
+                children: [
+                  addImageButton(pickImageMethod: pickImageMethod),
+                  horizontalSpace(width: 10),
+                  Expanded(
+                    child: Form(
+                      key: formKey,
+                      child: customTextField(
+                        controller: nameController,
+                        hintText: hintText,
+                        onSubmitted: onSubmitted,
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return "لا يمكن تركه فارغ";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              verticalSpace(height: 12),
+              customTextField(
+                controller: descController,
+                hintText: hintTextDesc,
+                onSubmitted: onSubmittedDesc,
+                maxLines: 3,
+                validator: (String? value) {},
+              ),
+              verticalSpace(height: 40),
+
+              StreamBuilder(
+                stream: imageStream,
+                builder: (context, snapShot) {
+                  if (snapShot.connectionState == ConnectionState.waiting) {
+                    return SizedBox();
+                    //   Center(
+                    //   child: CupertinoActivityIndicator(radius: 20),
+                    // );
+                  } else if (snapShot.data == null) {
+                    return SizedBox();
+                  } else if (snapShot.data != null) {
+                    return Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Image.file(
+                              File(snapShot.data!),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Text(
+                                    "Not Found",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                              // width: WidthManager.w32,
+                              height: HeightManager.h200,
+                              width: .infinity,
+                              fit: .cover,
+                            ),
+                            // if (snapShot.data != null)
+                            Positioned(
+                              child: IconButton(
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.black45,
+                                ),
+                                onPressed: onDeleteImage,
+                                icon: Icon(Icons.delete, color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                        verticalSpace(height: 15),
+                      ],
+                    );
+                  } else {
+                    return SizedBox();
+                  }
+                },
+              ),
+
+              customAddButton(
+                onTapAddInSheet: onTapAddInSheet,
+                textInButton: textInButton,
+              ),
+            ],
+          ),
+          // ),
         ),
       );
     },
