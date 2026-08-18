@@ -46,16 +46,7 @@ class StudyStageInStackWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: .center,
         children: [
-          // CircleAvatar( //or replace with ClipRRect
-          //   radius: 32.r,
-          //   backgroundColor: Colors.transparent,
-          //   child: Image.file(
-          //     File(educationModel.imagePath),
-          //     errorBuilder: (context, error, stackTrace) =>
-          //         SvgPicture.asset(AssetsValueManager.bnb3,),
-          //     // height: 64.h,
-          //     // width: 64.w,
-          //   ),),
+
           ClipRRect(
             borderRadius: BorderRadius.circular(CircleRadiusManager.r50),
             child: educationModel.imagePath == null
@@ -102,6 +93,18 @@ class StudyStageInStackWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: FontSizeManager.s10,
                       fontWeight: .w500,
+                      color: ColorManager.subtitle,
+                      fontFamily: FontManager.geDinerOne,
+                    ),
+                  ),
+                ), verticalSpace(height: 5),
+                SizedBox(
+                  child: Text(
+                    educationModel.dateCreated??"",
+
+                    style: TextStyle(
+                      fontSize: FontSizeManager.s10,
+                      fontWeight: .w400,
                       color: ColorManager.subtitle,
                       fontFamily: FontManager.geDinerOne,
                     ),

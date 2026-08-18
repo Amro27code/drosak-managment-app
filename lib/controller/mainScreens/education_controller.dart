@@ -14,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../view/education/widgets/add_education_sheet_widget.dart';
 
 class EducationController {
-  final BuildContext context;
+  late final BuildContext context;
   late List<EducationModel> educationList = [];
 
   String? pathImagePicker;
@@ -192,8 +192,7 @@ class EducationController {
     String pathDirectory = directory.path;
     final imagePathDirectory = "$pathDirectory/${image.name}";
     File fileImage = await File(image.path).copy(imagePathDirectory);
-    pathImagePicker=fileImage.path;
-
+    pathImagePicker = fileImage.path;
   }
 
   Future<void> pickImage({required ImageSource imageSource}) async {
@@ -239,5 +238,46 @@ class EducationController {
     _listEducationInputController.add(educationList);
   }
 
-  void onTapSearch() {}
+  void onTapSearch() {
+    showSearch(context: context, delegate: EducationSearchDelegate());
+  }
+}
+
+class EducationSearchDelegate extends SearchDelegate<String> {
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = "";
+        },
+        icon: Icon(Icons.close),
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        // Navigator.pop(context); NOOO
+        close(context, "");
+      },
+      icon: Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Center(
+      child: Text("buildResults", style: TextStyle(color: Colors.white)),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Center(
+      child: Text("buildSuggestions", style: TextStyle(color: Colors.white)),
+    );
+  }
 }

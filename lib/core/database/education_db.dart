@@ -15,7 +15,7 @@ class EducationOperations extends MySqfliteDatabase {
   }
 
   Future<List<EducationModel>> selectAllEducations() async {
-    //بدل ما يرجع عشكل ماب لا يرجع موديلات احسن عشان اقعدر اتعامل معه واعرضه للواجهات
+    //بدل ما يرجع عشكل ماب لا يرجع موديلات احسن عشان اقدر اتعامل معه واعرضه للواجهات
     List<EducationModel> listEducationModel = [];
     List<Map<String, Object?>> data = await select(
       tableName: MySqfliteDatabase.eduTable,

@@ -8,6 +8,7 @@ class MySqfliteDatabase extends CRUD {
   static const String eduTitleColumn = "educationTitle";
   static const String eduSubTitleColumn = "educationSubtitle";
   static const String eduImageColumn = "educationImagePath";
+  static const String dateCreatedColumn = "dateCreated";
 
   sqflite.Database? _database;
 
@@ -17,12 +18,22 @@ class MySqfliteDatabase extends CRUD {
     String drosakDatabaseName = "drosak.db";
     String myPath = join(path, drosakDatabaseName);
 
-    int version = 1;
+    int version = 3;
     _database ??= await sqflite.openDatabase(
       myPath,
       version: version,
       onOpen: (db) async => await db.execute("PRAGMA foreign_keys = ON"),
-      onUpgrade: (db, oldVersion, newVersion) {
+      onUpgrade: (db, oldVersion, newVersion) async {
+        await db.execute("DROP TABLE IF EXISTS $eduTable");
+        await db.execute(
+          "CREATE TABLE IF NOT EXISTS $eduTable"
+          " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$eduTitleColumn TEXT,"
+          "$eduSubTitleColumn TEXT,"
+          "$dateCreatedColumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+          "$eduImageColumn TEXT"
+          ");",
+        );
         print(db);
         print(oldVersion);
         print(newVersion);
@@ -38,6 +49,7 @@ class MySqfliteDatabase extends CRUD {
       " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
       "$eduTitleColumn TEXT,"
       "$eduSubTitleColumn TEXT,"
+      "$dateCreatedColumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
       "$eduImageColumn TEXT"
       ");",
     );
@@ -71,7 +83,7 @@ class MySqfliteDatabase extends CRUD {
     required String tableName,
   }) async {
     await initDatabase();
-print("After initDataBase-------");
+    print("After initDataBase-------");
     int inserted = await _database!.insert(tableName, values);
     print("After insertDataBase-------");
 

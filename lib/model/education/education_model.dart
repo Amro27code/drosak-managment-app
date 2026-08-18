@@ -6,18 +6,21 @@ class EducationModel {
 
   final String _title;
   final String _subtitle;
+  String? _dateCreated;
+
+  String? get dateCreated => _dateCreated;
 
   @override
   String toString() {
-    //عشان الطباعة يعني بدل ما اطبع اوبجكت ويقلي instance يطبعلي اللي هون
-    return 'EducationModel{_imagePath: $_imagePath, _id: $_id, _title: $_title, _subtitle: $_subtitle}';
+    return 'EducationModel{_imagePath: $_imagePath, _id: $_id, _title: $_title, _subtitle: $_subtitle, _dateCreated: $_dateCreated}';
   }
 
-  const EducationModel({
+  EducationModel({
     required this._imagePath,
     required this._title,
     required this._subtitle,
     required this._id,
+    this._dateCreated,
   });
 
   factory EducationModel.fromJson(Map json) {
@@ -26,16 +29,18 @@ class EducationModel {
       imagePath: json[MySqfliteDatabase.eduImageColumn] as String,
       title: json[MySqfliteDatabase.eduTitleColumn] as String,
       subtitle: json[MySqfliteDatabase.eduSubTitleColumn] as String,
+      dateCreated: json[MySqfliteDatabase.dateCreatedColumn].toString(),
     );
   }
 
-  Map<String,Object?> toJson(){
+  Map<String, Object?> toJson() {
     return {
       MySqfliteDatabase.eduTitleColumn: title,
       MySqfliteDatabase.eduSubTitleColumn: subtitle,
-      MySqfliteDatabase.eduImageColumn:  imagePath,
+      MySqfliteDatabase.eduImageColumn: imagePath,
     };
   }
+
   String get title => _title;
 
   int get id => _id;

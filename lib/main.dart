@@ -13,10 +13,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String routeName = await checkWhichScreen();
 
-  EducationOperations educationOperations = EducationOperations();
-  bool inserted = await educationOperations.insertEducation(
-    EducationModel(id: 0, title: "asd", subtitle: "dsa", imagePath: "image"),
-  );
+  // EducationOperations educationOperations = EducationOperations();
+  // // bool inserted = await educationOperations.insertEducation(
+  // //   EducationModel(id: 0, title: "asd", subtitle: "dsa", imagePath: "image", dateCreated: ''),
+  // // );
   runApp(MyApp(routeName: routeName));
 }
 

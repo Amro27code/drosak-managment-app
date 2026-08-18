@@ -23,18 +23,6 @@ class EducationBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return
-    //   FutureBuilder(
-    //   future: futureFunction,
-    //   builder: (context, snapShot) {
-    //     if (snapShot.connectionState == ConnectionState.waiting ||
-    //         snapShot.connectionState == ConnectionState.none) {
-    //       return CircularProgressIndicator();
-    //     } else if (snapShot.connectionState == ConnectionState.done) {
-    //       return ;
-    //     }
-    //     else return CircularProgressIndicator();
-    //   },
-    // );
     StreamBuilder(
       stream: stream,
       builder: (context, snapShot) {
