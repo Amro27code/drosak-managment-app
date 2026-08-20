@@ -9,6 +9,7 @@ class MySqfliteDatabase extends CRUD {
   static const String eduSubTitleColumn = "educationSubtitle";
   static const String eduImageColumn = "educationImagePath";
   static const String dateCreatedColumn = "dateCreated";
+  static const String statusColumn = "status";
 
   sqflite.Database? _database;
 
@@ -18,7 +19,7 @@ class MySqfliteDatabase extends CRUD {
     String drosakDatabaseName = "drosak.db";
     String myPath = join(path, drosakDatabaseName);
 
-    int version = 3;
+    int version = 8;
     _database ??= await sqflite.openDatabase(
       myPath,
       version: version,
@@ -30,6 +31,7 @@ class MySqfliteDatabase extends CRUD {
           " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
           "$eduTitleColumn TEXT,"
           "$eduSubTitleColumn TEXT,"
+          "$statusColumn INTEGER DEFAULT 1 CHECK ($statusColumn IN (0,1)),"
           "$dateCreatedColumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
           "$eduImageColumn TEXT"
           ");",
@@ -49,6 +51,7 @@ class MySqfliteDatabase extends CRUD {
       " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
       "$eduTitleColumn TEXT,"
       "$eduSubTitleColumn TEXT,"
+      "$statusColumn INTEGER DEFAULT 1 CHECK ($statusColumn IN (0,1)),"
       "$dateCreatedColumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
       "$eduImageColumn TEXT"
       ");",
@@ -73,7 +76,6 @@ class MySqfliteDatabase extends CRUD {
 
     int deleted = await _database!.delete(tableName, where: where);
     await _database!.close();
-
     return deleted == 0 ? false : true;
   }
 
@@ -92,10 +94,34 @@ class MySqfliteDatabase extends CRUD {
   }
 
   @override
-  Future<List<Map<String, Object?>>> select({required String tableName}) async {
+  Future<List<Map<String, Object?>>> select({
+    required String tableName,
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
     await initDatabase();
 
-    List<Map<String, Object?>> data = await _database!.query(tableName);
+    List<Map<String, Object?>> data = await _database!.query(
+      tableName,
+      where: where,
+      whereArgs: whereArgs,
+    );
+    await _database!.close();
+    return data;
+  }
+
+  @override
+  Future<List<Map<String, Object?>>> selectWhere({
+    required String tableName,
+    required String query,
+  }) async {
+    await initDatabase();
+
+    List<Map<String, Object?>> data = await _database!.query(
+      tableName,
+      where: "$eduTitleColumn LIKE ? AND $statusColumn==1",
+      whereArgs: ['%$query%'],
+    );
     await _database!.close();
     return data;
   }
@@ -108,14 +134,7 @@ class MySqfliteDatabase extends CRUD {
   }) async {
     await initDatabase();
 
-    int updated = await _database!.update(
-      tableName,
-      //     {
-      //   _userNameColumn: userName,
-      // },
-      values,
-      where: where,
-    );
+    int updated = await _database!.update(tableName, values, where: where);
     await _database!.close();
     return updated == 0 ? false : true;
   }

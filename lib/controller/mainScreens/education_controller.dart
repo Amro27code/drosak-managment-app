@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:drosak_managment_app/core/database/education_db.dart';
+import 'package:drosak_managment_app/core/database/my_sqflite_database.dart';
 import 'package:drosak_managment_app/core/numbers/font_size_manager.dart';
 import 'package:drosak_managment_app/core/resources/color_manager.dart';
 import 'package:drosak_managment_app/core/strings/font_manager.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../view/education/search/search_delegate.dart';
 import '../../view/education/widgets/add_education_sheet_widget.dart';
 
 class EducationController {
@@ -205,13 +207,6 @@ class EducationController {
     _imageInputController.add(pathImagePicker);
   }
 
-  Future<void> ppp() async {
-    final picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) pathImagePicker = image.path;
-    _imageInputController.add(pathImagePicker);
-  }
-
   void onSubmittedAddEducation(String value) {}
 
   Future<bool> addNewEducation() async {
@@ -241,43 +236,19 @@ class EducationController {
   void onTapSearch() {
     showSearch(context: context, delegate: EducationSearchDelegate());
   }
-}
 
-class EducationSearchDelegate extends SearchDelegate<String> {
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = "";
-        },
-        icon: Icon(Icons.close),
-      ),
-    ];
+  Future<void> deleteEducationFun(EducationModel educationModel) async {
+    //startToEnd --delete || endToStart --update
+    EducationOperations educationOperations = EducationOperations();
+
+    await educationOperations.softDelete(educationModel);
+
+    getAllEducations();
+    // _listEducationInputController.add(educationList);
   }
 
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        // Navigator.pop(context); NOOO
-        close(context, "");
-      },
-      icon: Icon(Icons.arrow_back),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Center(
-      child: Text("buildResults", style: TextStyle(color: Colors.white)),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Center(
-      child: Text("buildSuggestions", style: TextStyle(color: Colors.white)),
-    );
+  Future<void> updateEducationFun(EducationModel educationModel) async {
+    await educationOperations.deleteEducation(educationModel);
+    getAllEducations();
   }
 }

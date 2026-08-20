@@ -2,6 +2,22 @@ import '../../model/education/education_model.dart';
 import 'my_sqflite_database.dart';
 
 class EducationOperations extends MySqfliteDatabase {
+  Future<bool> deleteEducation(EducationModel educationModel) {
+    return delete(
+      tableName: MySqfliteDatabase.eduTable,
+      where: "${MySqfliteDatabase.eduIdColumn}==${educationModel.id}",
+    );
+  }
+
+  Future<bool> updateEducation({required int id}) {
+    //usually send to this function full model
+    return update(
+      tableName: MySqfliteDatabase.eduTable,
+      where: "${MySqfliteDatabase.eduIdColumn}==$id",
+      values: {},
+    );
+  }
+
   Future<bool> insertEducation(EducationModel educationModel) {
     return insert(
       values: educationModel.toJson(),
@@ -18,7 +34,9 @@ class EducationOperations extends MySqfliteDatabase {
     //بدل ما يرجع عشكل ماب لا يرجع موديلات احسن عشان اقدر اتعامل معه واعرضه للواجهات
     List<EducationModel> listEducationModel = [];
     List<Map<String, Object?>> data = await select(
-      tableName: MySqfliteDatabase.eduTable,
+        tableName: MySqfliteDatabase.eduTable,
+        where: "${MySqfliteDatabase.statusColumn}==?",
+        whereArgs: ["1"]
     );
     // TODO: وبدلا من استخدام الفور لوب الحل بتحت الكومينت
     // data.forEach((element) {
@@ -38,5 +56,28 @@ class EducationOperations extends MySqfliteDatabase {
         .map((item) => EducationModel.fromJson(item))
         .toList();
     return listEducationModel;
+  }
+
+  Future<List<EducationModel>> selectSearchEducations({
+    required String query,
+  }) async {
+    List<EducationModel> listEducationModel = [];
+    List<Map<String, Object?>> data = await selectWhere(
+      tableName: MySqfliteDatabase.eduTable,
+      query: query,
+    );
+    listEducationModel += data
+        .map((item) => EducationModel.fromJson(item))
+        .toList();
+    print(listEducationModel);
+    return listEducationModel;
+  }
+
+  Future<bool> softDelete(EducationModel model) async {
+    return await update(
+      tableName: MySqfliteDatabase.eduTable,
+      values: {MySqfliteDatabase.statusColumn: 0},
+      where: "${MySqfliteDatabase.eduIdColumn}==${model.id}",
+    );
   }
 }

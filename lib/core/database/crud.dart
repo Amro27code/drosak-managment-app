@@ -13,5 +13,14 @@ abstract class CRUD {
 
   Future<bool> delete({required String tableName, required String where});
 
-  Future<List<Map<String, Object?>>> select({required String tableName});
+  Future<List<Map<String, Object?>>> select({
+    required String tableName,
+    String? where,
+    List<Object?>? whereArgs,
+  });
+
+  Future<List<Map<String, Object?>>> selectWhere({
+    required String tableName,
+    required String query,
+  });
 }

@@ -7,13 +7,16 @@ class EducationModel {
   final String _title;
   final String _subtitle;
   String? _dateCreated;
-
-  String? get dateCreated => _dateCreated;
+  int _status;
 
   @override
   String toString() {
-    return 'EducationModel{_imagePath: $_imagePath, _id: $_id, _title: $_title, _subtitle: $_subtitle, _dateCreated: $_dateCreated}';
+    return 'EducationModel{_imagePath: $_imagePath, _id: $_id, _title: $_title, _subtitle: $_subtitle, _dateCreated: $_dateCreated, _status: $_status}';
   }
+
+  String? get dateCreated => _dateCreated;
+
+  int get status => _status;
 
   EducationModel({
     required this._imagePath,
@@ -21,6 +24,7 @@ class EducationModel {
     required this._subtitle,
     required this._id,
     this._dateCreated,
+    this._status = 1,
   });
 
   factory EducationModel.fromJson(Map json) {
@@ -30,6 +34,7 @@ class EducationModel {
       title: json[MySqfliteDatabase.eduTitleColumn] as String,
       subtitle: json[MySqfliteDatabase.eduSubTitleColumn] as String,
       dateCreated: json[MySqfliteDatabase.dateCreatedColumn].toString(),
+      status: json[MySqfliteDatabase.statusColumn],
     );
   }
 
