@@ -1,12 +1,21 @@
+import 'package:drosak_managment_app/controller/mainScreens/education_controller.dart';
 import 'package:drosak_managment_app/core/resources/color_manager.dart';
 import 'package:drosak_managment_app/view/education/search/custom_result_search_models.dart';
 import 'package:flutter/material.dart';
 import '../../../core/database/education_db.dart';
+import '../../../model/education/education_model.dart';
 
 class EducationSearchDelegate extends SearchDelegate<String> {
+  EducationSearchDelegate({
+    required this.deleteEduDismiss,
+    required this.updateEduDismiss,
+  });
+
+  final Function(EducationModel) deleteEduDismiss;
+  final Function(EducationModel) updateEduDismiss;
+
   @override
   ThemeData appBarTheme(BuildContext context) {
-    // TODO: implement appBarTheme
     return super
         .appBarTheme(context)
         .copyWith(
@@ -50,7 +59,6 @@ class EducationSearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     EducationOperations educationOperations = EducationOperations();
-
     return query.isEmpty
         ? Center(
             child: Text("D.N.E", style: TextStyle(color: Colors.white)),
@@ -59,13 +67,15 @@ class EducationSearchDelegate extends SearchDelegate<String> {
             getListSearch: educationOperations.selectSearchEducations(
               query: query,
             ),
+            onDismissedDeleteFun: deleteEduDismiss, //(EducationModel p1) {},
+            onDismissedUpdateFun: updateEduDismiss, //(EducationModel p1) {},
           );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     return Center(
-      child: Text("buildSuggestions", style: TextStyle(color: Colors.white)),
+      child: Text("build Suggestions", style: TextStyle(color: Colors.white)),
     );
   }
 }

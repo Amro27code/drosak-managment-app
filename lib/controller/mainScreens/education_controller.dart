@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:drosak_managment_app/core/database/education_db.dart';
-import 'package:drosak_managment_app/core/database/my_sqflite_database.dart';
 import 'package:drosak_managment_app/core/numbers/font_size_manager.dart';
 import 'package:drosak_managment_app/core/resources/color_manager.dart';
 import 'package:drosak_managment_app/core/strings/font_manager.dart';
@@ -11,7 +9,6 @@ import 'package:drosak_managment_app/model/education/education_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../../view/education/search/search_delegate.dart';
 import '../../view/education/widgets/add_education_sheet_widget.dart';
 
@@ -70,53 +67,64 @@ class EducationController {
     _descTextEditingController = TextEditingController();
     educationOperations = EducationOperations();
 
-    educationList = await educationOperations.selectAllEducations();
+    educationList = await educationOperations.selectSearchEducations();
     // await getAllEducations();
     print(educationList);
   }
 
   void onTapAdd() {
+    pathImagePicker = null;
     _imageInputController.add(pathImagePicker);
     _nameTextEditingController.clear();
-    addEducationSheetWidget(
+    _descTextEditingController.clear();
+    showModalBottomSheet(
       context: context,
+      backgroundColor: ColorManager.black,
+      isScrollControlled: true,
+      builder: (context) {
+        _imageInputController.add(pathImagePicker);
 
-      onSubmitted: onSubmittedAddEducation,
-      hintText: StringManager.addBnb1Name,
-      nameController: _nameTextEditingController,
-      textInButton: StringManager.add,
-      onTapAddInSheet: () async {
-        if (formKey.currentState == null) {
-        } else if (formKey.currentState!.validate()) {
-          bool inserted = await addNewEducation();
-          if (inserted) {
-            Navigator.pop(context);
-            educationList.add(
-              EducationModel(
-                imagePath: pathImagePicker, //== null ? "" : pathImagePicker!,
-                title: _nameTextEditingController.text,
-                subtitle: _descTextEditingController.text,
-                id: educationList.length + 1,
-              ),
-            );
-            _listEducationInputController.add(educationList);
+        return addEducationSheetWidget(
+          context: context,
+          onSubmitted: onSubmittedAddEducation,
+          hintText: StringManager.addBnb1Name,
+          nameController: _nameTextEditingController,
+          textInButton: StringManager.add,
+          onTapAddInSheet: () async {
+            if (formKey.currentState == null) {
+            } else if (formKey.currentState!.validate()) {
+              bool inserted = await addNewEducation();
+              if (inserted) {
+                Navigator.pop(context);
+                educationList.add(
+                  EducationModel(
+                    imagePath: pathImagePicker,
+                    //== null ? "" : pathImagePicker!,
+                    title: _nameTextEditingController.text,
+                    subtitle: _descTextEditingController.text,
+                    id: educationList.length + 1,
+                  ),
+                );
+                _listEducationInputController.add(educationList);
 
-            _nameTextEditingController.clear();
-            _descTextEditingController.clear();
-            pathImagePicker = null;
-            _imageInputController.add(pathImagePicker);
-          }
-        }
+                _nameTextEditingController.clear();
+                _descTextEditingController.clear();
+                pathImagePicker = null;
+                _imageInputController.add(pathImagePicker);
+              }
+            }
+          },
+          imageStream: imageOutputController,
+          onDeleteImage: onDeleteImage,
+          descController: _descTextEditingController,
+          hintTextDesc: StringManager.addBnb1Desc,
+          onSubmittedDesc: (value) {},
+          pickImageMethod: () {
+            pickImageMethod();
+          },
+          formKey: formKey,
+        );
       },
-      imageStream: imageOutputController,
-      onDeleteImage: onDeleteImage,
-      descController: _descTextEditingController,
-      hintTextDesc: StringManager.addBnb1Desc,
-      onSubmittedDesc: (value) {},
-      pickImageMethod: () {
-        pickImageMethod();
-      },
-      formKey: formKey,
     );
   }
 
@@ -225,30 +233,96 @@ class EducationController {
     // Navigator.of(context).pop();
   }
 
-  Future<void> getAllEducations() async {
+  Future<List<EducationModel>> getAllEducations() async {
     EducationOperations educationOperations = EducationOperations();
 
-    educationList = await educationOperations.selectAllEducations();
+    educationList = await educationOperations.selectSearchEducations();
     // educationListItems = items;
     _listEducationInputController.add(educationList);
+  return educationList;
   }
 
   void onTapSearch() {
-    showSearch(context: context, delegate: EducationSearchDelegate());
-  }
-
-  Future<void> deleteEducationFun(EducationModel educationModel) async {
-    //startToEnd --delete || endToStart --update
-    EducationOperations educationOperations = EducationOperations();
-
-    await educationOperations.softDelete(educationModel);
-
-    getAllEducations();
+    showSearch(
+      context: context,
+      delegate: EducationSearchDelegate(
+        deleteEduDismiss: (p0) {
+          deleteEducationFun(p0);
+          _listEducationInputController.add(educationList);
+        },
+        updateEduDismiss: updateEducationFun,
+      ),
+    ).then((value) => getAllEducations());
     // _listEducationInputController.add(educationList);
   }
 
-  Future<void> updateEducationFun(EducationModel educationModel) async {
-    await educationOperations.deleteEducation(educationModel);
+  Future<void> deleteEducationFun(EducationModel educationModel) async {
+    EducationOperations educationOperations = EducationOperations();
+
+    await educationOperations.softDelete(educationModel);
+    _listEducationInputController.add(educationList);
+
     getAllEducations();
+  }
+
+  Future<void> updateEducationFun(EducationModel educationModel) async {
+    //await educationOperations.deleteEducation(educationModel);
+
+    EducationOperations educationOperations = EducationOperations();
+
+    _nameTextEditingController.text = educationModel.title;
+    _descTextEditingController.text = educationModel.subtitle;
+    pathImagePicker = educationModel.imagePath;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: ColorManager.black,
+      isScrollControlled: true,
+      builder: (context) {
+        _imageInputController.add(pathImagePicker);
+
+        return addEducationSheetWidget(
+          context: context,
+          onSubmitted: onSubmittedAddEducation,
+          hintText: StringManager.addBnb1Name,
+          nameController: _nameTextEditingController,
+          textInButton: StringManager.edit,
+          onTapAddInSheet: () async {
+            if (formKey.currentState == null) {
+            } else if (formKey.currentState!.validate()) {
+              EducationModel eduModel = EducationModel(
+                imagePath: pathImagePicker,
+                title: _nameTextEditingController.text,
+                subtitle: _descTextEditingController.text,
+                id: educationModel.id,
+              );
+              bool update = await educationOperations.softUpdate(eduModel);
+
+              if (update) {
+                Navigator.pop(context);
+
+                int index = educationList.indexOf(educationModel);
+                educationList[index] = eduModel;
+                _listEducationInputController.add(educationList);
+
+                //TODO:   OR =>      بس الفوق احسن لانك انت بس بدك تعدل عنصر واحد فما في داعي تجيب الداتا من جديد
+                // await getAllEducations();
+              }
+            }
+          },
+          imageStream: imageOutputController,
+          onDeleteImage: onDeleteImage,
+          descController: _descTextEditingController,
+          hintTextDesc: StringManager.addBnb1Desc,
+          onSubmittedDesc: (value) {},
+          pickImageMethod: () {
+            pickImageMethod();
+          },
+          formKey: formKey,
+        );
+      },
+    );
+    _listEducationInputController.add(educationList);
+    // await getAllEducations();
   }
 }

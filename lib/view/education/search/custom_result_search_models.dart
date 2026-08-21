@@ -8,9 +8,16 @@ import '../../../model/education/education_model.dart';
 import '../widgets/item_biulder_education.dart';
 
 class CustomResultSearchModels extends StatelessWidget {
-  const CustomResultSearchModels({super.key, required this.getListSearch});
+  const CustomResultSearchModels({
+    super.key,
+    required this.getListSearch,
+    required this.onDismissedDeleteFun,
+    required this.onDismissedUpdateFun,
+  });
 
   final Future<List<EducationModel>> getListSearch;
+  final Function(EducationModel) onDismissedDeleteFun;
+  final Function(EducationModel) onDismissedUpdateFun;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +45,9 @@ class CustomResultSearchModels extends StatelessWidget {
                     : ItemBuilderEducation(
                         educationModel: snapShot.data![index],
                         onDismissedDeleteFun:
-                            (EducationModel educationModel) {},
+                        onDismissedDeleteFun,
                         onDismissedUpdateFun:
-                            (EducationModel educationModel) {},
+                           onDismissedUpdateFun,
                       ),
               );
       },

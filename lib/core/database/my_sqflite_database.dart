@@ -98,7 +98,8 @@ class MySqfliteDatabase extends CRUD {
     required String tableName,
     String? where,
     List<Object?>? whereArgs,
-  }) async {
+  }) async
+  {
     await initDatabase();
 
     List<Map<String, Object?>> data = await _database!.query(
@@ -113,14 +114,16 @@ class MySqfliteDatabase extends CRUD {
   @override
   Future<List<Map<String, Object?>>> selectWhere({
     required String tableName,
-    required String query,
+    String query = "",
+    String? where,
+    List<Object?>? whereArgs,
   }) async {
     await initDatabase();
 
     List<Map<String, Object?>> data = await _database!.query(
       tableName,
-      where: "$eduTitleColumn LIKE ? AND $statusColumn==1",
-      whereArgs: ['%$query%'],
+      where: where,//"$eduTitleColumn LIKE ? AND $statusColumn==?",
+      whereArgs: whereArgs//['%$query%', '1'],
     );
     await _database!.close();
     return data;

@@ -78,6 +78,8 @@ class ItemBuilderEducation extends StatelessWidget {
               ],
             ),
           );
+        } else {
+          await onDismissedUpdateFun(educationModel);
         }
         return confirmDelete;
       },

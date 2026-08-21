@@ -30,7 +30,7 @@ class EducationModel {
   factory EducationModel.fromJson(Map json) {
     return EducationModel(
       id: json[MySqfliteDatabase.eduIdColumn] as int,
-      imagePath: json[MySqfliteDatabase.eduImageColumn] as String,
+      imagePath: json[MySqfliteDatabase.eduImageColumn] as String?,
       title: json[MySqfliteDatabase.eduTitleColumn] as String,
       subtitle: json[MySqfliteDatabase.eduSubTitleColumn] as String,
       dateCreated: json[MySqfliteDatabase.dateCreatedColumn].toString(),
