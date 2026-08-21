@@ -1,5 +1,5 @@
 import 'package:drosak_managment_app/core/resources/color_manager.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' hide RefreshCallback;
 import 'package:flutter/material.dart';
 
 import '../../../core/numbers/height_manager.dart';
@@ -11,15 +11,16 @@ import '../widgets/item_biulder_education.dart';
 class EducationBody extends StatelessWidget {
   const EducationBody({
     super.key,
-    required this.futureFunction,
     required this.stream,
     required this.onDismissedDeleteFun,
     required this.onDismissedUpdateFun,
+    required this.onRefresh,
   });
 
   // final DismissDirectionCallback onDismissed;
-  final Future<void> futureFunction;
   final Stream<List<EducationModel>> stream;
+  final RefreshCallback onRefresh;
+
   final Function(EducationModel educationModel) onDismissedDeleteFun;
   final Function(EducationModel educationModel) onDismissedUpdateFun;
 
@@ -35,22 +36,26 @@ class EducationBody extends StatelessWidget {
                   color: ColorManager.primary,
                 ),
               )
-            : ListView.separated(
-                padding: EdgeInsets.symmetric(
-                  horizontal: PaddingManager.p16,
-                  vertical: PaddingManager.p18,
+            : RefreshIndicator(
+                onRefresh: onRefresh,
+                child: ListView.separated(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: PaddingManager.p16,
+                    vertical: PaddingManager.p18,
+                  ),
+                  itemCount:
+                      (snapShot.data ?? []).length + 1, //_educationList.length,
+                  separatorBuilder: (context, index) =>
+                      verticalSpace(height: HeightManager.h16),
+                  itemBuilder: (context, index) =>
+                      snapShot.data!.length == index
+                      ? verticalSpace(height: 40)
+                      : ItemBuilderEducation(
+                          educationModel: snapShot.data![index],
+                          onDismissedDeleteFun: onDismissedDeleteFun,
+                          onDismissedUpdateFun: onDismissedUpdateFun,
+                        ),
                 ),
-                itemCount:
-                    (snapShot.data ?? []).length + 1, //_educationList.length,
-                separatorBuilder: (context, index) =>
-                    verticalSpace(height: HeightManager.h16),
-                itemBuilder: (context, index) => snapShot.data!.length == index
-                    ? verticalSpace(height: 40)
-                    : ItemBuilderEducation(
-                        educationModel: snapShot.data![index],
-                        onDismissedDeleteFun:onDismissedDeleteFun,
-                        onDismissedUpdateFun:onDismissedUpdateFun,
-                      ),
               );
       },
     );

@@ -42,9 +42,10 @@ class _EducationState extends State<Education> {
 
       body: EducationBody(
         stream: _educationController.listEducationOutputController,
-        futureFunction: _educationController.getAllEducations(),
+        // futureFunction: _educationController.getAllEducations(),
         onDismissedDeleteFun: _educationController.deleteEducationFun,
         onDismissedUpdateFun: _educationController.updateEducationFun,
+        onRefresh: _educationController.onRefresh,
       ),
     );
   }

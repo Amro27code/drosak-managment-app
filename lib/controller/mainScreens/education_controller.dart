@@ -23,6 +23,9 @@ class EducationController {
 
   late StreamController<List<EducationModel>> _listEducationStreamController;
   late Sink<List<EducationModel>> _listEducationInputController;
+
+  Sink<List<EducationModel>> get listEducationInputController =>
+      _listEducationInputController;
   late Stream<List<EducationModel>> listEducationOutputController;
 
   late StreamController<String?> _imageStreamController;
@@ -239,17 +242,14 @@ class EducationController {
     educationList = await educationOperations.selectSearchEducations();
     // educationListItems = items;
     _listEducationInputController.add(educationList);
-  return educationList;
+    return educationList;
   }
 
   void onTapSearch() {
     showSearch(
       context: context,
       delegate: EducationSearchDelegate(
-        deleteEduDismiss: (p0) {
-          deleteEducationFun(p0);
-          _listEducationInputController.add(educationList);
-        },
+        deleteEduDismiss: deleteEducationFun,
         updateEduDismiss: updateEducationFun,
       ),
     ).then((value) => getAllEducations());
@@ -324,5 +324,12 @@ class EducationController {
     );
     _listEducationInputController.add(educationList);
     // await getAllEducations();
+  }
+
+  Future<void> onRefresh() async {
+    educationList.clear();
+    listEducationInputController.add(educationList);
+    await getAllEducations();
+     Future.delayed(Duration(seconds: 1));
   }
 }
