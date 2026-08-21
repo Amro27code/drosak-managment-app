@@ -1,4 +1,5 @@
 import 'package:drosak_managment_app/controller/main/main_screen_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../bnb/bnb_main_screen.dart';
@@ -31,9 +32,11 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: StreamBuilder<int>(
         stream: _mainScreenController.currentIndexBnbOutput,
-        builder: (context, snapshot) => MainScreenController
-            .bnbItems[snapshot.data ??
-                0] // maybe replace 0 to args[StringManager.indexScreen]
+        builder: (context, snapshot) =>
+        snapshot.connectionState == ConnectionState.waiting ? Center(
+          child: CupertinoActivityIndicator(),):
+        MainScreenController
+            .bnbItems[snapshot.data!] // maybe replace 0 to args[StringManager.indexScreen]
             .screen,
       ),
       bottomNavigationBar: BnbMainScreen(

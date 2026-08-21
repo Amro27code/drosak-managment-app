@@ -65,13 +65,16 @@ class EducationController {
   }
 
   Future<void> init() async {
+
     initControllers();
-    _nameTextEditingController = TextEditingController();
+   _nameTextEditingController = TextEditingController();
     _descTextEditingController = TextEditingController();
     educationOperations = EducationOperations();
 
     educationList = await educationOperations.selectSearchEducations();
-    // await getAllEducations();
+    educationList.clear();
+        listEducationInputController.add(educationList);
+    await getAllEducations();
     print(educationList);
   }
 
@@ -327,9 +330,9 @@ class EducationController {
   }
 
   Future<void> onRefresh() async {
-    educationList.clear();
-    listEducationInputController.add(educationList);
-    await getAllEducations();
-     Future.delayed(Duration(seconds: 1));
+
+    // await getAllEducations();
+    await init();
+    Future.delayed(Duration(seconds: 1));
   }
 }

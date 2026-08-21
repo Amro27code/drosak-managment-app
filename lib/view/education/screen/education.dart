@@ -2,7 +2,7 @@ import 'package:drosak_managment_app/controller/mainScreens/education_controller
 import 'package:drosak_managment_app/core/database/education_db.dart';
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:flutter/material.dart';
-import '../../main/widget/custom_app_bar.dart';
+import '../../../core/resources/widgets/appBarWidget/custom_app_bar.dart';
 import '../body/education_body.dart';
 
 class Education extends StatefulWidget {
