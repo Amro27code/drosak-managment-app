@@ -2,6 +2,7 @@ import 'package:drosak_managment_app/view/Attendance/screen/attendance.dart';
 import 'package:drosak_managment_app/view/Audience/screen/audience.dart';
 import 'package:drosak_managment_app/view/Explore/screen/explore_screen.dart';
 import 'package:drosak_managment_app/view/education/screen/education.dart';
+import 'package:drosak_managment_app/view/group/appBar%20screens/create_group_screen.dart';
 import 'package:drosak_managment_app/view/group/screen/group.dart';
 import 'package:drosak_managment_app/view/main/screen/main_screen.dart';
 import 'package:drosak_managment_app/view/on_boarding/screens/on_boarding_screen.dart';
@@ -20,6 +21,7 @@ class RoutesManager {
     RouteNames.attendance: (context) => const Attendance(),
     RouteNames.education: (context) => const Education(),
     RouteNames.audience: (context) => const Audience(),
+    RouteNames.addNewGroup: (context) => const CreateGroupScreen(),
   };
 }
 
@@ -33,4 +35,5 @@ class RouteNames {
   static const String group = "group";
   static const String audience = "aud";
   static const String attendance = "att";
+  static const String addNewGroup = "addGroup";
 }

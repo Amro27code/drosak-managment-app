@@ -6,6 +6,8 @@ class StringManager {
   static const String bnb4 = "الحضور";
   static const String bnb3 = "الطلاب";
   static const String bnb2 = "المجموعات";
+  static const String addNewGroup = "إضافة مجموعة جديدة";
+  static const String editThisGroup = "تعديل تلك المجموعة";
   static const String bnb1 = "المراحل التعليمية";
   static const String addBnb1Name = "إسم المرحلة التعليمية";
   static const String addBnb1Desc = "وصف المرحلة التعليمية";

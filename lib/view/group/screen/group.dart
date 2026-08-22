@@ -20,7 +20,7 @@ class _GroupState extends State<Group> {
   @override
   void initState() {
     super.initState();
-    _groupController = GroupController();
+    _groupController = GroupController(context);
   }
 
   @override
@@ -30,7 +30,9 @@ class _GroupState extends State<Group> {
       appBar: CustomAppBar(
         title: StringManager.bnb2,
         onTapSearch: () {},
-        onTapAdd: () {},
+        onTapAdd: () {
+          _groupController.onTapAdd(appBarTitle: StringManager.addNewGroup);
+        },
       ),
       body: BodyGroupScreen(
         // stream: null,
