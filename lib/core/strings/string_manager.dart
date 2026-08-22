@@ -11,5 +11,7 @@ class StringManager {
   static const String addBnb1Desc = "وصف المرحلة التعليمية";
   static const String add = "إضافة";
   static const String edit = "تعديل";
+  static const String notes = "الملاحظات";
+
   static const String indexScreen = "indexScreen";
 }

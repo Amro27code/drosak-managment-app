@@ -71,10 +71,10 @@ class EducationController {
     _descTextEditingController = TextEditingController();
     educationOperations = EducationOperations();
 
-    educationList = await educationOperations.selectSearchEducations();
-    educationList.clear();
-        listEducationInputController.add(educationList);
-    await getAllEducations();
+    //! educationList = await educationOperations.selectSearchEducations();
+    // !educationList.clear();
+    //     listEducationInputController.add(educationList);
+    //! await getAllEducations();
     print(educationList);
   }
 

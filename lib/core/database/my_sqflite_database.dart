@@ -11,6 +11,22 @@ class MySqfliteDatabase extends CRUD {
   static const String dateCreatedColumn = "dateCreated";
   static const String statusColumn = "status";
 
+  //!===================Groups=======================
+  static const String groupTable = "group";
+  static const String groupIdColumn = "groupId";
+  static const String groupNameColumn = "groupName";
+  static const String groupNoteColumn = "groupNote";
+  static const String groupImageColumn = "groupImagePath";
+  static const String groupEduFKColumn = "educationID";
+
+  //?===================Appointment=======================
+  static const String appointmentTable = "appointment";
+  static const String appointmentIdColumn = "appointmentId";
+  static const String appointmentDayColumn = "appointmentDay";
+  static const String appointmentTimeColumn = "appointmentTime";
+  static const String appointmentPMorAMColumn = "appointmentPMorAM";
+  static const String appointmentGroupFKColumn = "groupID";
+
   sqflite.Database? _database;
 
   Future<sqflite.Database> initDatabase() async {
@@ -19,22 +35,46 @@ class MySqfliteDatabase extends CRUD {
     String drosakDatabaseName = "drosak.db";
     String myPath = join(path, drosakDatabaseName);
 
-    int version = 8;
+    int version = 1;
     _database ??= await sqflite.openDatabase(
       myPath,
       version: version,
       onOpen: (db) async => await db.execute("PRAGMA foreign_keys = ON"),
+
       onUpgrade: (db, oldVersion, newVersion) async {
+
         await db.execute("DROP TABLE IF EXISTS $eduTable");
+        //* ==================== create education table==============
         await db.execute(
           "CREATE TABLE IF NOT EXISTS $eduTable"
-          " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$eduTitleColumn TEXT,"
-          "$eduSubTitleColumn TEXT,"
-          "$statusColumn INTEGER DEFAULT 1 CHECK ($statusColumn IN (0,1)),"
-          "$dateCreatedColumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-          "$eduImageColumn TEXT"
-          ");",
+              " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$eduTitleColumn TEXT,"
+              "$eduSubTitleColumn TEXT,"
+              "$statusColumn INTEGER DEFAULT 1 CHECK ($statusColumn IN (0,1)),"
+              "$dateCreatedColumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+              "$eduImageColumn TEXT"
+              ");",
+        );
+        //! ==================== create group table==============
+        await db.execute(
+          "CREATE TABLE IF NOT EXISTS $groupTable"
+              " ($groupIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$groupNameColumn TEXT,"
+              "$groupImageColumn TEXT,"
+              "$groupNoteColumn TEXT,"
+              "CONSTRAINT group_education FOREIGN KEY ($groupEduFKColumn) REFERENCES $eduTable ($eduIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
+              ");",
+        );
+        //? ==================== create Appointment table==============
+
+        await db.execute(
+          "CREATE TABLE IF NOT EXISTS $appointmentTable"
+              " ($appointmentIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+              "$appointmentDayColumn TEXT,"
+              "$appointmentTimeColumn TEXT,"
+              "$appointmentPMorAMColumn TEXT,"
+              "CONSTRAINT appointment_group FOREIGN KEY ($appointmentGroupFKColumn) REFERENCES $groupTable ($groupIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
+              ");",
         );
         print(db);
         print(oldVersion);
@@ -46,6 +86,7 @@ class MySqfliteDatabase extends CRUD {
   }
 
   Future<void> _onCreate(sqflite.Database db, int version) async {
+    //* ==================== create education table==============
     await db.execute(
       "CREATE TABLE IF NOT EXISTS $eduTable"
       " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -56,18 +97,27 @@ class MySqfliteDatabase extends CRUD {
       "$eduImageColumn TEXT"
       ");",
     );
-    // await db.execute(
-    //   "CREATE TABLE IF NOT EXISTS $_productTable ($_productIdColumn INTEGER PRIMARY KEY AUTOINCREMENT ,$_productNameColumn TEXT,$_productPriceColumn REAL,$_productCountColumn INTEGER);",
-    // );
-    // await db.execute(
-    //   "CREATE TABLE IF NOT EXISTS $_salesTable"
-    //   " ($_salesIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
-    //   "$_salesUserIDColumn INTEGER,"
-    //   "$_salesProductIDColumn INTEGER,"
-    //   "CONSTRAINT user_relations FOREIGN KEY ($_salesUserIDColumn) REFERENCES $_userTable ($_userIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
-    //   "CONSTRAINT product_relations FOREIGN KEY ($_salesProductIDColumn) REFERENCES $_productTable ($_productIdColumn) ON DELETE CASCADE ON UPDATE CASCADE"
-    //   ");",
-    // );
+    //! ==================== create group table==============
+    await db.execute(
+      "CREATE TABLE IF NOT EXISTS $groupTable"
+      " ($groupIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "$groupNameColumn TEXT,"
+      "$groupImageColumn TEXT,"
+      "$groupNoteColumn TEXT,"
+      "CONSTRAINT group_education FOREIGN KEY ($groupEduFKColumn) REFERENCES $eduTable ($eduIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
+      ");",
+    );
+    //? ==================== create Appointment table==============
+
+    await db.execute(
+      "CREATE TABLE IF NOT EXISTS $appointmentTable"
+      " ($appointmentIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "$appointmentDayColumn TEXT,"
+      "$appointmentTimeColumn TEXT,"
+      "$appointmentPMorAMColumn TEXT,"
+      "CONSTRAINT appointment_group FOREIGN KEY ($appointmentGroupFKColumn) REFERENCES $groupTable ($groupIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
+      ");"
+    );
   }
 
   @override
@@ -98,8 +148,7 @@ class MySqfliteDatabase extends CRUD {
     required String tableName,
     String? where,
     List<Object?>? whereArgs,
-  }) async
-  {
+  }) async {
     await initDatabase();
 
     List<Map<String, Object?>> data = await _database!.query(
@@ -122,8 +171,8 @@ class MySqfliteDatabase extends CRUD {
 
     List<Map<String, Object?>> data = await _database!.query(
       tableName,
-      where: where,//"$eduTitleColumn LIKE ? AND $statusColumn==?",
-      whereArgs: whereArgs//['%$query%', '1'],
+      where: where, //"$eduTitleColumn LIKE ? AND $statusColumn==?",
+      whereArgs: whereArgs, //['%$query%', '1'],
     );
     await _database!.close();
     return data;

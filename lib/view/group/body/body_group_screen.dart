@@ -1,13 +1,10 @@
 import 'package:drosak_managment_app/view/group/widget/item_builder_group.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide RefreshCallback;
-
 import '../../../core/numbers/height_manager.dart';
 import '../../../core/numbers/padding_margin_manager.dart';
-import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
 import '../../../model/education/education_model.dart';
-import '../../education/widgets/item_biulder_education.dart';
 
 class BodyGroupScreen extends StatelessWidget {
   const BodyGroupScreen({
