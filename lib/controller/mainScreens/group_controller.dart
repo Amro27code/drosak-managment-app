@@ -3,12 +3,17 @@ import 'package:flutter/cupertino.dart';
 
 class GroupController {
   BuildContext context;
+  late TextEditingController nameGroupEditingController;
+  late TextEditingController descGroupEditingController;
 
   GroupController(this.context) {
     init();
   }
 
-  void init() {}
+  void init() {
+    nameGroupEditingController=TextEditingController();
+    descGroupEditingController=TextEditingController();
+  }
 
   void onTapAdd({required String appBarTitle}) {
     Navigator.pushNamed(

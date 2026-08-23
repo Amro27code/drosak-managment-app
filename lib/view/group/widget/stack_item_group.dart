@@ -1,16 +1,11 @@
-import 'dart:io';
-
-import 'package:drosak_managment_app/core/numbers/padding_margin_manager.dart';
-import 'package:drosak_managment_app/core/numbers/radius_circle_avatar.dart';
-import 'package:drosak_managment_app/core/resources/assets_manager.dart';
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/numbers/circle_radius_manager.dart';
 import '../../../core/numbers/font_size_manager.dart';
 import '../../../core/resources/color_manager.dart';
+import '../../../core/resources/widgets/functions/custom_table_widget.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
 import '../../../core/strings/font_manager.dart';
 
@@ -63,103 +58,15 @@ class StudyGroupInStackWidget extends StatelessWidget {
                     ),
                   ),
                   verticalSpace(height: 5),
-                  Table(
-                    border: TableBorder.all(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(
-                        RadiusCircleAvatar.rc15,
-                      ),
-                    ),
-                    children: [
-                      TableRow(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: PaddingManager.p4,
-                              horizontal: PaddingManager.p12,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "اليوم",
-                                // textAlign: .end,
-                                style: TextStyle(color: ColorManager.primary),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: PaddingManager.p4,
-                              horizontal: PaddingManager.p12,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "الوقت",
-                                style: TextStyle(color: ColorManager.primary),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: PaddingManager.p4,
-                              horizontal: PaddingManager.p12,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "م / ص",
-                                style: TextStyle(color: ColorManager.primary),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      for(int i=1;i<=5;i++)
-                      TableRow(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: PaddingManager.p4,
-                              horizontal: PaddingManager.p12,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "اليوم",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: PaddingManager.p4,
-                              horizontal: PaddingManager.p12,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "الوقت",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: PaddingManager.p4,
-                              horizontal: PaddingManager.p12,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "م / ص",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  CustomTableWidget(
+                    secondaryRowColor: Colors.white,
+                    tableColor: Colors.white,
+                    day: 'الاحد',
+                    time: '10:30',
+                    tPM_OR_AM: 'م',
+                    lengthSecondaryRow: 3,
+
+                    isEdit: true,
                   ),
                   verticalSpace(height: 5),
                   SizedBox(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/numbers/circle_radius_manager.dart';
-import '../../../core/numbers/font_size_manager.dart';
-import '../../../core/resources/color_manager.dart';
-import '../../../core/strings/font_manager.dart';
+import '../../../numbers/circle_radius_manager.dart';
+import '../../../numbers/font_size_manager.dart';
+import '../../color_manager.dart';
+import '../../../strings/font_manager.dart';
 
 TextFormField customTextField({
   required String? hintText,

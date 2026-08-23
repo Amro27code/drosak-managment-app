@@ -1,6 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WidthManager {
+  static double w5 = 5.w;
   static double w9 = 9.w;
   static double w13 = 13.w;
   static double w16 = 16.w;

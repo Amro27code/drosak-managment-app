@@ -9,11 +9,28 @@ class StringManager {
   static const String addNewGroup = "إضافة مجموعة جديدة";
   static const String editThisGroup = "تعديل تلك المجموعة";
   static const String bnb1 = "المراحل التعليمية";
+  static const String groupName = "اسم المجموعة";
   static const String addBnb1Name = "إسم المرحلة التعليمية";
   static const String addBnb1Desc = "وصف المرحلة التعليمية";
+  static const String chooseEduStage = "إختر المرحلة التعليمية";
   static const String add = "إضافة";
   static const String edit = "تعديل";
   static const String notes = "الملاحظات";
+  static const String time = "الوقت";
+  static const String chooseTime = "إختر الوقت ";
+  static const String day = "اليوم";
+  static const String chooseDay = "إختر اليوم";
+  static const String search = "بحث";
+  static const String saveAll = "حفظ الكل";
+  static const List<String> days = [
+    "الاحد",
+    "الاثنين",
+    "الثلاثاء",
+    "الاربعاء",
+    "الخميس",
+    "الجمعة",
+    "السبت",
+  ];
 
   static const String indexScreen = "indexScreen";
 }
