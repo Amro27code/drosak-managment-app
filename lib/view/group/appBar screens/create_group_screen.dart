@@ -1,15 +1,10 @@
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:drosak_managment_app/core/numbers/padding_margin_manager.dart';
-import 'package:drosak_managment_app/core/resources/color_manager.dart';
 import 'package:drosak_managment_app/core/resources/widgets/functions/custom_table_widget.dart';
-import 'package:drosak_managment_app/core/strings/font_manager.dart';
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:flutter/material.dart';
 import '../../../controller/mainScreens/add_new_group_controller.dart';
 import '../../../core/resources/widgets/functions/custom_row_elevated_button.dart';
-import '../../../core/resources/widgets/space/horizontal_space.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
-import '../../../model/education/education_model.dart';
 import '../widget/MiddleSectionCreateNewGroup.dart';
 import '../widget/custom_app_bar_new_group.dart';
 import '../widget/tap_section_widget.dart';
@@ -31,7 +26,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   List<String> items = ["amro", "ammar"];
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +51,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   nameKey: _addNewGroupController.nameKey,
                 ),
                 verticalSpace(height: 21),
-                MiddleSectionCreateNewGroup(listEducationModel: [], onChanged: _addNewGroupController.onChanged,),
+                MiddleSectionCreateNewGroup(
+                  listEducationName: _addNewGroupController.listNameEducations,
+                  onChangedDay: _addNewGroupController.onChangedEducationStage,
+                  onPressedChooseTime: () {},
+                  onPressedSave: () {},
+                  radioButtonStream: _addNewGroupController.outputRadioButton,
+                  groupValueAM: _addNewGroupController.timeGroup,
+                  timeGroup: _addNewGroupController.timeGroup,
+                  onChangedRadio: _addNewGroupController.onChangedRadio,
+                ),
                 verticalSpace(height: 21),
                 CustomTableWidget(
-                  day: "الاحد",
-                  time: "11:30",
-                  tPM_OR_AM: "ص",
+                  listGroupModel: _addNewGroupController.listGroupModel,
                   isEdit: true,
                   lengthSecondaryRow: 1,
                 ),
@@ -70,6 +71,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 CustomRowElevatedButtonWidget(
                   iconData: Icons.save,
                   text: StringManager.saveAll,
+                  onPressed: () {},
                   // width: WidthManager.w95,
                 ),
               ],

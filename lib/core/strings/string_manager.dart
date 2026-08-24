@@ -22,6 +22,9 @@ class StringManager {
   static const String chooseDay = "إختر اليوم";
   static const String search = "بحث";
   static const String saveAll = "حفظ الكل";
+  static const String tPMorAM = "م/ص";
+  static const String pm = "مساء";
+  static const String am = "صباح";
   static const List<String> days = [
     "الاحد",
     "الاثنين",

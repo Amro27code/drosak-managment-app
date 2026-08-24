@@ -12,7 +12,7 @@ class MySqfliteDatabase extends CRUD {
   static const String statusColumn = "status";
 
   //!===================Groups=======================
-  static const String groupTable = "group";
+  static const String groupTable = "Groups";
   static const String groupIdColumn = "groupId";
   static const String groupNameColumn = "groupName";
   static const String groupNoteColumn = "groupNote";
@@ -20,7 +20,7 @@ class MySqfliteDatabase extends CRUD {
   static const String groupEduFKColumn = "educationID";
 
   //?===================Appointment=======================
-  static const String appointmentTable = "appointment";
+  static const String appointmentTable = "Appointment";
   static const String appointmentIdColumn = "appointmentId";
   static const String appointmentDayColumn = "appointmentDay";
   static const String appointmentTimeColumn = "appointmentTime";
@@ -42,40 +42,12 @@ class MySqfliteDatabase extends CRUD {
       onOpen: (db) async => await db.execute("PRAGMA foreign_keys = ON"),
 
       onUpgrade: (db, oldVersion, newVersion) async {
-
         await db.execute("DROP TABLE IF EXISTS $eduTable");
-        //* ==================== create education table==============
-        await db.execute(
-          "CREATE TABLE IF NOT EXISTS $eduTable"
-              " ($eduIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$eduTitleColumn TEXT,"
-              "$eduSubTitleColumn TEXT,"
-              "$statusColumn INTEGER DEFAULT 1 CHECK ($statusColumn IN (0,1)),"
-              "$dateCreatedColumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-              "$eduImageColumn TEXT"
-              ");",
-        );
-        //! ==================== create group table==============
-        await db.execute(
-          "CREATE TABLE IF NOT EXISTS $groupTable"
-              " ($groupIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$groupNameColumn TEXT,"
-              "$groupImageColumn TEXT,"
-              "$groupNoteColumn TEXT,"
-              "CONSTRAINT group_education FOREIGN KEY ($groupEduFKColumn) REFERENCES $eduTable ($eduIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
-              ");",
-        );
-        //? ==================== create Appointment table==============
+        await db.execute("DROP TABLE IF EXISTS $groupTable");
+        await db.execute("DROP TABLE IF EXISTS $appointmentTable");
 
-        await db.execute(
-          "CREATE TABLE IF NOT EXISTS $appointmentTable"
-              " ($appointmentIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
-              "$appointmentDayColumn TEXT,"
-              "$appointmentTimeColumn TEXT,"
-              "$appointmentPMorAMColumn TEXT,"
-              "CONSTRAINT appointment_group FOREIGN KEY ($appointmentGroupFKColumn) REFERENCES $groupTable ($groupIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
-              ");",
-        );
+        await tablesCreate(db);
+
         print(db);
         print(oldVersion);
         print(newVersion);
@@ -85,7 +57,7 @@ class MySqfliteDatabase extends CRUD {
     return _database!;
   }
 
-  Future<void> _onCreate(sqflite.Database db, int version) async {
+  Future<void> tablesCreate(sqflite.Database db) async {
     //* ==================== create education table==============
     await db.execute(
       "CREATE TABLE IF NOT EXISTS $eduTable"
@@ -104,7 +76,8 @@ class MySqfliteDatabase extends CRUD {
       "$groupNameColumn TEXT,"
       "$groupImageColumn TEXT,"
       "$groupNoteColumn TEXT,"
-      "CONSTRAINT group_education FOREIGN KEY ($groupEduFKColumn) REFERENCES $eduTable ($eduIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
+      "$groupEduFKColumn INTEGER,"
+      "CONSTRAINT group_education FOREIGN KEY ($groupEduFKColumn) REFERENCES $eduTable ($eduIdColumn) ON DELETE CASCADE ON UPDATE CASCADE"
       ");",
     );
     //? ==================== create Appointment table==============
@@ -115,9 +88,14 @@ class MySqfliteDatabase extends CRUD {
       "$appointmentDayColumn TEXT,"
       "$appointmentTimeColumn TEXT,"
       "$appointmentPMorAMColumn TEXT,"
-      "CONSTRAINT appointment_group FOREIGN KEY ($appointmentGroupFKColumn) REFERENCES $groupTable ($groupIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
-      ");"
+      "$appointmentGroupFKColumn INTEGER,"
+      "CONSTRAINT appointment_group FOREIGN KEY ($appointmentGroupFKColumn) REFERENCES $groupTable ($groupIdColumn) ON DELETE CASCADE ON UPDATE CASCADE"
+      ");",
     );
+  }
+
+  Future<void> _onCreate(sqflite.Database db, int version) async {
+    await tablesCreate(db);
   }
 
   @override
@@ -165,12 +143,14 @@ class MySqfliteDatabase extends CRUD {
     required String tableName,
     String query = "",
     String? where,
+    List<String>? columns,
     List<Object?>? whereArgs,
   }) async {
     await initDatabase();
 
     List<Map<String, Object?>> data = await _database!.query(
       tableName,
+      columns: columns,
       where: where, //"$eduTitleColumn LIKE ? AND $statusColumn==?",
       whereArgs: whereArgs, //['%$query%', '1'],
     );

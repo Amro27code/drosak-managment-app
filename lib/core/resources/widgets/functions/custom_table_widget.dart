@@ -1,3 +1,5 @@
+import 'package:drosak_managment_app/core/strings/string_manager.dart';
+import 'package:drosak_managment_app/model/group/group_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../numbers/padding_margin_manager.dart';
@@ -10,21 +12,19 @@ class CustomTableWidget extends StatelessWidget {
     this.tableColor = ColorManager.primary,
     this.primaryRowColor = ColorManager.primary,
     this.secondaryRowColor = ColorManager.primary,
-    required this.day,
-    required this.time,
-    required this.tPM_OR_AM,
+
     required this.lengthSecondaryRow,
     required this.isEdit,
+    required this.listGroupModel,
   });
 
   final Color tableColor;
   final Color primaryRowColor;
   final Color secondaryRowColor;
-  final String day;
-  final String time;
-  final String tPM_OR_AM;
+
   final int lengthSecondaryRow;
   final bool isEdit;
+  final List<GroupModel> listGroupModel;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class CustomTableWidget extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  "اليوم",
+                  StringManager.day,
                   // textAlign: .end,
                   style: TextStyle(color: primaryRowColor),
                 ),
@@ -56,7 +56,10 @@ class CustomTableWidget extends StatelessWidget {
                 horizontal: PaddingManager.p12,
               ),
               child: Center(
-                child: Text("الوقت", style: TextStyle(color: primaryRowColor)),
+                child: Text(
+                  StringManager.time,
+                  style: TextStyle(color: primaryRowColor),
+                ),
               ),
             ),
             Padding(
@@ -65,13 +68,16 @@ class CustomTableWidget extends StatelessWidget {
                 horizontal: PaddingManager.p12,
               ),
               child: Center(
-                child: Text("م / ص", style: TextStyle(color: primaryRowColor)),
+                child: Text(
+                  StringManager.tPMorAM,
+                  style: TextStyle(color: primaryRowColor),
+                ),
               ),
             ),
             if (isEdit) Center(child: Text(" ")),
           ],
         ),
-        for (int i = 1; i <= lengthSecondaryRow; i++)
+        for (int i = 0; i < listGroupModel.length; i++)
           TableRow(
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
             children: [
@@ -82,16 +88,10 @@ class CustomTableWidget extends StatelessWidget {
                   horizontal: PaddingManager.p12,
                 ),
                 child: Center(
-                  child: Text(day, style: TextStyle(color: secondaryRowColor)),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: PaddingManager.p4,
-                  horizontal: PaddingManager.p12,
-                ),
-                child: Center(
-                  child: Text(time, style: TextStyle(color: secondaryRowColor)),
+                  child: Text(
+                    listGroupModel[i].day,
+                    style: TextStyle(color: secondaryRowColor),
+                  ),
                 ),
               ),
               Padding(
@@ -101,7 +101,19 @@ class CustomTableWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    tPM_OR_AM,
+                    listGroupModel[i].time,
+                    style: TextStyle(color: secondaryRowColor),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: PaddingManager.p4,
+                  horizontal: PaddingManager.p12,
+                ),
+                child: Center(
+                  child: Text(
+                    listGroupModel[i].tPMorAM,
                     style: TextStyle(color: secondaryRowColor),
                   ),
                 ),

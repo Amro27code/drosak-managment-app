@@ -70,19 +70,24 @@ class EducationController {
    _nameTextEditingController = TextEditingController();
     _descTextEditingController = TextEditingController();
     educationOperations = EducationOperations();
-
     //! educationList = await educationOperations.selectSearchEducations();
     // !educationList.clear();
     //     listEducationInputController.add(educationList);
     //! await getAllEducations();
+     educationList = await educationOperations.selectSearchEducations();
+    educationList.clear();
+        listEducationInputController.add(educationList);
+     await getAllEducations();
     print(educationList);
   }
 
   void onTapAdd() {
     pathImagePicker = null;
     _imageInputController.add(pathImagePicker);
-    _nameTextEditingController.clear();
-    _descTextEditingController.clear();
+    //! _nameTextEditingController.clear();
+    //! _descTextEditingController.clear();
+     _nameTextEditingController.clear();
+     _descTextEditingController.clear();
     showModalBottomSheet(
       context: context,
       backgroundColor: ColorManager.black,
@@ -332,7 +337,7 @@ class EducationController {
   Future<void> onRefresh() async {
 
     // await getAllEducations();
-    await init();
+    // await init();
     Future.delayed(Duration(seconds: 1));
   }
 }

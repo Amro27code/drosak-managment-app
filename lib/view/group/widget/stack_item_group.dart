@@ -61,9 +61,7 @@ class StudyGroupInStackWidget extends StatelessWidget {
                   CustomTableWidget(
                     secondaryRowColor: Colors.white,
                     tableColor: Colors.white,
-                    day: 'الاحد',
-                    time: '10:30',
-                    tPM_OR_AM: 'م',
+                    listGroupModel: [],
                     lengthSecondaryRow: 3,
 
                     isEdit: true,

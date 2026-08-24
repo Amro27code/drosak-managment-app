@@ -9,20 +9,27 @@ import '../../color_manager.dart';
 class CustomRowElevatedButtonWidget extends StatelessWidget {
   const CustomRowElevatedButtonWidget({
     super.key,
-    required this.iconData,
-    required this.text,
+    this.iconData,
+    this.text,
     this.mainAxisSize = .max,
+    this.notText = false,
+    this.notIcon = false,
+    required this.onPressed,
   });
 
-  final IconData iconData;
-  final String text;
+  final IconData? iconData;
+  final String? text;
+  final bool notText;
+  final bool notIcon;
   final MainAxisSize mainAxisSize;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: EdgeInsets.symmetric(
           horizontal: PaddingManager.p24,
           vertical: PaddingManager.p5,
@@ -36,8 +43,13 @@ class CustomRowElevatedButtonWidget extends StatelessWidget {
         mainAxisAlignment: .center,
         mainAxisSize: mainAxisSize,
         children: [
-          Text(text, style: TextStyle(fontSize: FontSizeManager.s14)),
-          Icon(iconData, color: Colors.white, size: FontSizeManager.s14),
+          if (!notText)
+            Text(
+              text == null ? "" : text!,
+              style: TextStyle(fontSize: FontSizeManager.s14),
+            ),
+          if (!notIcon)
+            Icon(iconData, color: Colors.white, size: FontSizeManager.s14),
         ],
       ),
     );

@@ -11,15 +11,15 @@ class GroupController {
   }
 
   void init() {
-    nameGroupEditingController=TextEditingController();
-    descGroupEditingController=TextEditingController();
+    nameGroupEditingController = TextEditingController();
+    descGroupEditingController = TextEditingController();
   }
 
   void onTapAdd({required String appBarTitle}) {
     Navigator.pushNamed(
       context,
       RouteNames.addNewGroup,
-      arguments: appBarTitle//{"appBarTitle": appBarTitle},
+      arguments: appBarTitle, //{"appBarTitle": appBarTitle},
     );
   }
 }
