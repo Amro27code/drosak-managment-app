@@ -18,8 +18,8 @@ class EducationOperations extends MySqfliteDatabase {
   //   );
   // }
 
-  Future<bool> insertEducation(EducationModel educationModel) {
-    return insert(
+  Future<bool> insertEducation(EducationModel educationModel) async {
+    int insertE = await insert(//!!!!!!!!!!!!!!!
       values: educationModel.toJson(),
       // {
       //   MySqfliteDatabase.eduTitleColumn: educationModel.title,
@@ -28,6 +28,7 @@ class EducationOperations extends MySqfliteDatabase {
       // },
       tableName: MySqfliteDatabase.eduTable,
     );
+    return insertE != 0 ? true : false;
   }
 
   // Future<List<EducationModel>> selectAllEducations() async {
@@ -59,14 +60,15 @@ class EducationOperations extends MySqfliteDatabase {
   // }
 
   Future<List<EducationModel>> selectSearchEducations({
-     String query="",
+    String query = "",
   }) async {
     List<EducationModel> listEducationModel = [];
     List<Map<String, Object?>> data = await selectWhere(
       tableName: MySqfliteDatabase.eduTable,
       query: query,
-      where: "${MySqfliteDatabase.eduTitleColumn} LIKE ? AND ${MySqfliteDatabase.statusColumn}==?",
-      whereArgs: ['%$query%','1'],
+      where:
+          "${MySqfliteDatabase.eduTitleColumn} LIKE ? AND ${MySqfliteDatabase.statusColumn}==?",
+      whereArgs: ['%$query%', '1'],
     );
     listEducationModel += data
         .map((item) => EducationModel.fromJson(item))

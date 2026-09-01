@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../controller/mainScreens/add_new_group_controller.dart';
 import '../../../core/resources/widgets/functions/custom_row_elevated_button.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
-import '../widget/MiddleSectionCreateNewGroup.dart';
+import '../widget/middle_section_create_new_group.dart';
 import '../widget/custom_app_bar_new_group.dart';
 import '../widget/tap_section_widget.dart';
 
@@ -24,8 +24,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     super.initState();
     _addNewGroupController = AddNewGroupController(context);
   }
-
-  List<String> items = ["amro", "ammar"];
 
   @override
   Widget build(BuildContext context) {
@@ -52,26 +50,30 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 ),
                 verticalSpace(height: 21),
                 MiddleSectionCreateNewGroup(
-                  listEducationName: _addNewGroupController.listNameEducations,
-                  onChangedDay: _addNewGroupController.onChangedEducationStage,
-                  onPressedChooseTime: () {},
-                  onPressedSave: () {},
+                  onChangedDay: _addNewGroupController.onChangedDay,
+                  onChangedStage: _addNewGroupController.onChangedStage,
+                  onPressedChooseTime:
+                      _addNewGroupController.onPressedChooseTime,
+                  onPressedSave: _addNewGroupController.onPressedSave,
                   radioButtonStream: _addNewGroupController.outputRadioButton,
-                  groupValueAM: _addNewGroupController.timeGroup,
+                  // groupValueAM: _addNewGroupController.timeGroup,
                   timeGroup: _addNewGroupController.timeGroup,
                   onChangedRadio: _addNewGroupController.onChangedRadio,
+                  streamListEducation:
+                      _addNewGroupController.outputListEducation,
                 ),
                 verticalSpace(height: 21),
                 CustomTableWidget(
-                  listGroupModel: _addNewGroupController.listGroupModel,
+                  // listGroupModel: _addNewGroupController.newListGroupModel,
                   isEdit: true,
-                  lengthSecondaryRow: 1,
+                  onPressedDelete: _addNewGroupController.onPressedDeleteRecord,
+                  streamTableList: _addNewGroupController.outputListNewTable,
                 ),
                 verticalSpace(height: 21),
                 CustomRowElevatedButtonWidget(
                   iconData: Icons.save,
                   text: StringManager.saveAll,
-                  onPressed: () {},
+                  onPressed: _addNewGroupController.onPressedSaveAll,
                   // width: WidthManager.w95,
                 ),
               ],

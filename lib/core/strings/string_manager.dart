@@ -23,8 +23,11 @@ class StringManager {
   static const String search = "بحث";
   static const String saveAll = "حفظ الكل";
   static const String tPMorAM = "م/ص";
-  static const String pm = "مساء";
-  static const String am = "صباح";
+  static const String pm = "م";
+  static const String am = "ص";
+  static const String choose = "إختار";
+  static const String cancel="إلغاء";
+
   static const List<String> days = [
     "الاحد",
     "الاثنين",
@@ -36,4 +39,7 @@ class StringManager {
   ];
 
   static const String indexScreen = "indexScreen";
+
+  static  const String remove="حذف";
+
 }

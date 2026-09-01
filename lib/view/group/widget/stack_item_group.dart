@@ -1,18 +1,26 @@
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../core/numbers/circle_radius_manager.dart';
 import '../../../core/numbers/font_size_manager.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/widgets/functions/custom_table_widget.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
 import '../../../core/strings/font_manager.dart';
+import '../../../model/group/fk_group_appointment.dart';
+import '../../../model/group/time_of_day_model.dart';
 
 class StudyGroupInStackWidget extends StatelessWidget {
-  const StudyGroupInStackWidget({super.key});
+  const StudyGroupInStackWidget({
+    super.key,
+    required this.groupModel,
+    required this.streamTableList, required this.editFun, required this.deleteFun,
+  });
 
-  // final EducationModel educationModel;
+  final FkGroupAppointment groupModel;
+  final Stream<List<AppointmentModel>> streamTableList;
+  final VoidCallback editFun;
+  final VoidCallback deleteFun;
 
   @override
   Widget build(BuildContext context) {
@@ -45,37 +53,62 @@ class StudyGroupInStackWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Column(
-                // crossAxisAlignment: .end,
+                crossAxisAlignment: .start,
                 children: [
-                  Text(
-                    "المجموعة الأولي بنات / الصف الأول الإعدادي",
-                    textAlign: .end,
-                    style: TextStyle(
-                      fontSize: FontSizeManager.s16,
-                      color: Colors.white,
-                      fontWeight: .w500,
-                      fontFamily: FontManager.geDinerOne,
-                    ),
+                  Row(
+                    // mainAxisAlignment: .spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          groupModel.groupModel.name,
+                          textAlign: .end,
+                          style: TextStyle(
+                            fontSize: FontSizeManager.s16,
+                            color: Colors.white,
+                            fontWeight: .w500,
+                            fontFamily: FontManager.geDinerOne,
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+                      PopupMenuButton(
+                        //! اسحبه
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            onTap: editFun,
+                            child: Text(StringManager.edit),
+                          ),
+                          PopupMenuItem(
+                            onTap: deleteFun,
+                            child: Text(StringManager.remove),
+                          ),
+                        ],
+                        child: Icon(
+                          Icons.more_horiz_outlined,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                   verticalSpace(height: 5),
+                  //! TABLE
                   CustomTableWidget(
                     secondaryRowColor: Colors.white,
                     tableColor: Colors.white,
-                    listGroupModel: [],
-                    lengthSecondaryRow: 3,
-
                     isEdit: true,
+                    streamTableList: streamTableList,
+                    notStream: true,
+                    fkList: groupModel,
+                    groupId: groupModel.groupModel.id,
                   ),
                   verticalSpace(height: 5),
-                  SizedBox(
-                    child: Text(
-                      "${StringManager.notes}:",
-                      style: TextStyle(
-                        fontSize: FontSizeManager.s10,
-                        fontWeight: .w400,
-                        color: ColorManager.subtitle,
-                        fontFamily: FontManager.geDinerOne,
-                      ),
+                  Text(
+                    "${StringManager.notes}: ${groupModel.groupModel.note ?? ''}",
+                    style: TextStyle(
+                      fontSize: FontSizeManager.s10,
+                      fontWeight: .w400,
+                      color: ColorManager.subtitle,
+                      fontFamily: FontManager.geDinerOne,
                     ),
                   ),
                 ],

@@ -27,8 +27,6 @@ class ItemBuilderEducation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: ValueKey(educationModel.id),
-      //بتاخذ حاجة unique
-      // direction: DismissDirection.startToEnd,
       confirmDismiss: (direction) async {
         bool? confirmDelete;
         if (direction == DismissDirection.startToEnd) {

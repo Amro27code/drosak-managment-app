@@ -108,17 +108,14 @@ class MySqfliteDatabase extends CRUD {
   }
 
   @override
-  Future<bool> insert({
+  Future<int> insert({
     required Map<String, Object?> values,
     required String tableName,
   }) async {
     await initDatabase();
-    print("After initDataBase-------");
     int inserted = await _database!.insert(tableName, values);
-    print("After insertDataBase-------");
-
     await _database!.close();
-    return inserted == 0 ? false : true;
+    return inserted ;//== 0 ? false : true;
   }
 
   @override

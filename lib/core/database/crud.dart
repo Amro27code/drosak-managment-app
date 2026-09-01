@@ -1,6 +1,6 @@
 abstract class CRUD {
   //Future<int> بخليه bool لانه مش بهمني الرقم اللي برجعلياياه فيهم اللي بهمني انه عمل insert او لا
-  Future<bool> insert({
+  Future<int> insert({
     required Map<String, Object?> values,
     required String tableName,
   });

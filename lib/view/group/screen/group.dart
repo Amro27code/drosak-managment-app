@@ -35,10 +35,11 @@ class _GroupState extends State<Group> {
         },
       ),
       body: BodyGroupScreen(
-        // stream: null,
-        onDismissedDeleteFun: (EducationModel educationModel) {},
-        onDismissedUpdateFun: (EducationModel educationModel) {},
-        onRefresh: () async {},
+        // deleteFun: ,
+        editFun: _groupController.editFun,
+        onRefresh: _groupController.onRefresh,
+        groupListStream: _groupController.outputGroupList,
+        streamTableList: _groupController.outputFk,
       ),
     );
   }
