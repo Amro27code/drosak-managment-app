@@ -8,6 +8,8 @@ import 'package:drosak_managment_app/model/group/group_model.dart';
 import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/strings/string_manager.dart';
+
 class GroupController {
   BuildContext context;
   late GroupOperations groupOperations;
@@ -43,12 +45,21 @@ class GroupController {
     print(groupList);
   }
 
-  void onTapAdd({required String appBarTitle}) {
+  void onTapAdd({
+    bool isEdit = false,
+    GroupModel? groupModel,
+    AppointmentModel? appointmentModel,
+  }) {
+    // int newId = groupList.isEmpty ? 1 : groupList.last.id + 1;
     Navigator.pushNamed(
       context,
       RouteNames.addNewGroup,
-      arguments: groupList.isEmpty ? 1 : groupList.last.id + 1,
-      //{"appBarTitle": appBarTitle},
+      arguments:
+      // {
+      //   "idNewGroup": newId,
+      //   "status":
+      StringManager.addNewGroup,
+      // }, //groupList.isEmpty ? 1 : groupList.last.id + 1,
     ).then((value) => getAllData()); //!
   }
 
@@ -104,7 +115,7 @@ class GroupController {
                 fkList.remove(fkAGModel);
                 _inputGroupList.add(fkList);
                 Navigator.of(context).pop(true);
-                }
+              }
             },
             child: Text("نعم"),
           ),
@@ -119,5 +130,12 @@ class GroupController {
     );
   }
 
-  void editFun() {}
+  void editFun(FkGroupAppointment model) {
+    Navigator.of(context)
+        .pushNamed(
+          RouteNames.addNewGroup,
+          arguments: {"status": StringManager.editThisGroup, "fkModel": model},
+        )
+        .then((value) => getAllData());
+  }
 }

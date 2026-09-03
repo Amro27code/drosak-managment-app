@@ -3,6 +3,7 @@ import 'package:drosak_managment_app/core/database/appointment_db.dart';
 import 'package:drosak_managment_app/core/database/group_db.dart';
 import 'package:drosak_managment_app/core/resources/widgets/functions/convert_time_of_period_to_string.dart';
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
+import 'package:drosak_managment_app/model/group/fk_group_appointment.dart';
 import 'package:drosak_managment_app/model/group/group_model.dart';
 import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,6 @@ class AddNewGroupController {
 
   Future<List<EducationModel>> getAllEducations() async {
     EducationOperations educationOperations = EducationOperations();
-
     listNameEducations = await educationOperations.selectSearchEducations();
     _inputListEducation.add(listNameEducations);
     return listNameEducations;
@@ -78,13 +78,47 @@ class AddNewGroupController {
     dayGroup = day;
   }
 
+
   late String status = StringManager.addNewGroup;
   late int idNewGroup;
 
+  //? getArgsFromBackScreen
   void getArgsFromBackScreen() {
-    var arg = ModalRoute.of(context);
-    if (arg != null) {
-      idNewGroup = arg.settings.arguments as int;
+    var arg = ModalRoute.of(context); //!.settings.arguments as Map;
+    // var arg = ModalRoute.of(context)!.settings.arguments as Map;
+    if (ModalRoute.of(context) != null) {
+      var arguments = arg!.settings.arguments;
+      if (arguments is Map) {
+        //   ? now add
+        getArgsMap(arguments);
+        print(arguments);
+      } else {
+        //   idNewGroup = (arg["idNewGroup"] as int?) ?? 1;
+        status = arguments as String;
+      }
+
+      // dayGroup = arg["appointmentModel"].day as String?;
+      // timeGroup = arg["appointmentModel"].time as TimeOfDay?;
+      // nameEditingController.text = (arg["groupModel"].name as String?) ?? "";
+      // descEditingController.text = (arg["groupModel"].note as String?) ?? "";
+      // eduGroup = arg["groupModel"] as int;
+    }
+  }
+
+  void getArgsMap(var arguments) {
+    if (arguments.containsKey("status")) {
+      status = arguments["status"] as String;
+    }
+    if (arguments.containsKey("fkModel")) {
+      if (arguments["fkModel"] is FkGroupAppointment) {
+        listAppointment =
+            arguments["fkModel"].appointments as List<AppointmentModel>;
+        _inputListNewTable.add(listAppointment);
+
+        GroupModel groupModel = arguments["fkModel"].groupModel as GroupModel;
+        nameEditingController.text = groupModel.name;
+        descEditingController.text = groupModel.note ?? "";
+      }
     }
   }
 
@@ -108,16 +142,8 @@ class AddNewGroupController {
       helpText: StringManager.chooseTime,
     );
     if (time != null) {
-      print("${time} ================");
-      print("${time.hourOfPeriod} ================");
-      print("${time.periodOffset} ================");
-      print("${time.hour} ================");
-      print("${time.minute} ================");
-      print("${time.period} ================");
-      // String x=(time.period == DayPeriod.am ? "ص" : "م");
       timeGroup = time;
     }
-    // _inputTimeGroup.add(timeGroup);
   }
 
   Future<void> onPressedSave() async {
@@ -137,8 +163,8 @@ class AddNewGroupController {
           day: dayGroup!,
           time: convertTimeOfDayToString(timeGroup!),
           tPMorAM: periodForTimeOfDay(timeGroup!),
-          groupIdFK: idNewGroup,
-          appointmentId: 100, //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // groupIdFK: idNewGroup,
+          // appointmentId: 100, //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ),
       );
       print(listAppointment.last.groupIdFK);

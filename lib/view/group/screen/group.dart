@@ -31,12 +31,12 @@ class _GroupState extends State<Group> {
         title: StringManager.bnb2,
         onTapSearch: () {},
         onTapAdd: () {
-          _groupController.onTapAdd(appBarTitle: StringManager.addNewGroup);
+          _groupController.onTapAdd();
         },
       ),
       body: BodyGroupScreen(
         // deleteFun: ,
-        editFun: _groupController.editFun,
+        // editFun: _groupController.editFun,
         onRefresh: _groupController.onRefresh,
         groupListStream: _groupController.outputGroupList,
         streamTableList: _groupController.outputFk,

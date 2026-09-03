@@ -13,7 +13,6 @@ class BodyGroupScreen extends StatefulWidget {
     super.key,
     required this.onRefresh,
     // required this.deleteFun,
-    required this.editFun,
     required this.groupListStream,
     required this.streamTableList,
   });
@@ -23,7 +22,6 @@ class BodyGroupScreen extends StatefulWidget {
 
   //
   // final VoidCallback deleteFun;
-  final VoidCallback editFun;
   final Stream<List<FkGroupAppointment>> groupListStream;
 
   @override
@@ -64,7 +62,9 @@ class _BodyGroupScreenState extends State<BodyGroupScreen> {
                       deleteFun: () {
                         _groupController.deleteFun(snapshot.data![index]);
                       },
-                      editFun: widget.editFun,
+                      editFun: () {
+                        _groupController.editFun(snapshot.data![index]);
+                      },
                       streamTableList: widget.streamTableList,
                       // educationModel: null,
                     ),
