@@ -1,8 +1,5 @@
 import 'package:drosak_managment_app/model/group/group_model.dart';
-import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 
-import '../../model/group/fk_group_appointment.dart';
-import 'appointment_db.dart';
 import 'my_sqflite_database.dart';
 
 class GroupOperations extends MySqfliteDatabase {
@@ -47,6 +44,19 @@ class GroupOperations extends MySqfliteDatabase {
     return insert(
       values: groupModel.toJson(),
       tableName: MySqfliteDatabase.groupTable,
+    );
+  }
+
+  Future<bool> updateGroupTable(GroupModel groupModel) {
+    return update(
+      tableName: MySqfliteDatabase.groupTable,
+      where: "${MySqfliteDatabase.groupIdColumn}=${groupModel.id}",
+      values: groupModel.toJson(),
+      // {
+      //   MySqfliteDatabase.groupNameColumn:groupModel.name,
+      //   MySqfliteDatabase.groupNoteColumn:groupModel.note,
+      //   MySqfliteDatabase.groupEduFKColumn:groupModel.educationFKId,
+      // },
     );
   }
 

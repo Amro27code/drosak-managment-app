@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/widgets/functions/convert_time_of_period_to_string.dart';
@@ -25,6 +26,8 @@ class MiddleSectionCreateNewGroup extends StatelessWidget {
     required this.onChangedRadio,
     required this.streamListEducation,
     required this.onChangedStage,
+    this.initialEduItem,
+    required this.selectedEduInEdit,
   });
 
   final Function(String?) onChangedDay;
@@ -34,8 +37,11 @@ class MiddleSectionCreateNewGroup extends StatelessWidget {
   final TimeOfDay? timeGroup;
   final Stream<String?> radioButtonStream;
   final Stream<List<EducationModel>> streamListEducation;
+  final Stream<EducationModel?> selectedEduInEdit;
   final String? groupValueAM;
   final ValueChanged<String?> onChangedRadio;
+
+  final EducationModel? initialEduItem;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +57,12 @@ class MiddleSectionCreateNewGroup extends StatelessWidget {
               ),
             ),
             horizontalSpace(width: 11),
-            StreamBuilder<List<EducationModel>>(
-              stream: streamListEducation,
-              builder: (context, snapshot) {
-                return snapshot.connectionState == ConnectionState.waiting
+            StreamBuilder2<List<EducationModel>, EducationModel?>(
+              // stream: streamListEducation,
+              streams: StreamTuple2(streamListEducation, selectedEduInEdit),
+              builder: (context, snapshots) {
+                return snapshots.snapshot1.connectionState ==
+                        ConnectionState.waiting
                     ? Center(child: CupertinoActivityIndicator())
                     :
                       //! ========= choose EDU ============
@@ -62,7 +70,8 @@ class MiddleSectionCreateNewGroup extends StatelessWidget {
                         child: CustomDropdown<EducationModel>.search(
                           searchHintText: StringManager.search,
                           hintText: StringManager.chooseEduStage,
-                          items: snapshot.data,
+                          items: snapshots.snapshot1.data,
+                          initialItem:initialEduItem,// snapshots.snapshot2.data,//initialEduItem,
                           headerBuilder: (context, selectedItem, enabled) {
                             print(enabled);
                             print(selectedItem);

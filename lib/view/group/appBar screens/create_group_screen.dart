@@ -1,6 +1,7 @@
 import 'package:drosak_managment_app/core/numbers/padding_margin_manager.dart';
 import 'package:drosak_managment_app/core/resources/widgets/functions/custom_table_widget.dart';
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
+import 'package:drosak_managment_app/model/education/education_model.dart';
 import 'package:flutter/material.dart';
 import '../../../controller/mainScreens/add_new_group_controller.dart';
 import '../../../core/resources/widgets/functions/custom_row_elevated_button.dart';
@@ -49,18 +50,27 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   nameKey: _addNewGroupController.nameKey,
                 ),
                 verticalSpace(height: 21),
-                MiddleSectionCreateNewGroup(
-                  onChangedDay: _addNewGroupController.onChangedDay,
-                  onChangedStage: _addNewGroupController.onChangedStage,
-                  onPressedChooseTime:
-                      _addNewGroupController.onPressedChooseTime,
-                  onPressedSave: _addNewGroupController.onPressedSave,
-                  radioButtonStream: _addNewGroupController.outputRadioButton,
-                  // groupValueAM: _addNewGroupController.timeGroup,
-                  timeGroup: _addNewGroupController.timeGroup,
-                  onChangedRadio: _addNewGroupController.onChangedRadio,
-                  streamListEducation:
-                      _addNewGroupController.outputListEducation,
+                StreamBuilder<EducationModel?>(
+                  stream: _addNewGroupController.outputEducationEdit,
+                  builder: (context, asyncSnapshot) {
+                    return MiddleSectionCreateNewGroup(
+                      onChangedDay: _addNewGroupController.onChangedDay,
+                      onChangedStage: _addNewGroupController.onChangedStage,
+                      onPressedChooseTime:
+                          _addNewGroupController.onPressedChooseTime,
+                      onPressedSave: _addNewGroupController.onPressedSave,
+                      radioButtonStream:
+                          _addNewGroupController.outputRadioButton,
+                      initialEduItem: asyncSnapshot.data,
+                      // _addNewGroupController.eduGroup,
+                      timeGroup: _addNewGroupController.timeGroup,
+                      onChangedRadio: _addNewGroupController.onChangedRadio,
+                      streamListEducation:
+                          _addNewGroupController.outputListEducation,
+                      selectedEduInEdit:
+                          _addNewGroupController.outputEducationEdit,
+                    );
+                  },
                 ),
                 verticalSpace(height: 21),
                 CustomTableWidget(
@@ -72,8 +82,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 verticalSpace(height: 21),
                 CustomRowElevatedButtonWidget(
                   iconData: Icons.save,
-                  text: StringManager.saveAll,
-                  onPressed: _addNewGroupController.onPressedSaveAll,
+                  text:
+                      _addNewGroupController.status ==
+                          StringManager.editThisGroup
+                      ? StringManager.edit
+                      : StringManager.saveAll,
+                  onPressed:
+                      _addNewGroupController.editOrSaveAll, //!!!!!!!!!!!!!!!!!
                   // width: WidthManager.w95,
                 ),
               ],

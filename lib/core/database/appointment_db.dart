@@ -1,4 +1,5 @@
 import 'package:drosak_managment_app/core/database/my_sqflite_database.dart';
+import 'package:drosak_managment_app/model/group/group_model.dart';
 import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 
 class AppointmentOperations extends MySqfliteDatabase {
@@ -39,6 +40,12 @@ print(list);
   Future<bool> deleteFromAppointmentTable(AppointmentModel model) {
     return delete(
       where: "${MySqfliteDatabase.appointmentIdColumn}==${model.appointmentId}",
+      tableName: MySqfliteDatabase.appointmentTable,
+    );
+  }
+  Future<bool> deleteAllAppointmentForGroup(GroupModel g) {
+    return delete(
+      where: "${MySqfliteDatabase.appointmentGroupFKColumn}==${g.id}",
       tableName: MySqfliteDatabase.appointmentTable,
     );
   }

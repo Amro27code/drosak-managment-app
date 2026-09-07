@@ -42,7 +42,7 @@ class GroupController {
 
     getAllData();
 
-    print(groupList);
+    // print(groupList);
   }
 
   void onTapAdd({
@@ -60,7 +60,7 @@ class GroupController {
       //   "status":
       StringManager.addNewGroup,
       // }, //groupList.isEmpty ? 1 : groupList.last.id + 1,
-    ).then((value) => getAllData()); //!
+    ).then((value) => getAllData());
   }
 
   void getAllData() async {
@@ -82,7 +82,7 @@ class GroupController {
       );
       _inputGroupList.add(fkList);
     }
-    log(fkList.toString());
+    // log(fkList.toString());
   }
 
   void addController() {
@@ -96,8 +96,7 @@ class GroupController {
   }
 
   void deleteFun(FkGroupAppointment fkAGModel) async {
-    bool? confirmDelete;
-    confirmDelete = await showDialog(
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text("هل تريد الحذف ؟"),

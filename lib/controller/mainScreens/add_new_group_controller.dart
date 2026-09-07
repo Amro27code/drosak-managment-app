@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:drosak_managment_app/core/database/appointment_db.dart';
 import 'package:drosak_managment_app/core/database/group_db.dart';
 import 'package:drosak_managment_app/core/resources/widgets/functions/convert_time_of_period_to_string.dart';
@@ -25,6 +26,10 @@ class AddNewGroupController {
   late Sink<List<EducationModel>> _inputListEducation;
   late Stream<List<EducationModel>> outputListEducation;
 
+  late StreamController<EducationModel?> _educationEditStreamController;
+  late Sink<EducationModel?> _inputEducationEdit;
+  late Stream<EducationModel?> outputEducationEdit;
+
   late StreamController<List<AppointmentModel>> _listNewTableStreamController;
   late Sink<List<AppointmentModel>> _inputListNewTable;
   late Stream<List<AppointmentModel>> outputListNewTable;
@@ -44,21 +49,34 @@ class AddNewGroupController {
 
     _radioButtonStreamController = StreamController();
     _inputRadioButton = _radioButtonStreamController.sink;
-    outputRadioButton = _radioButtonStreamController.stream;
+    outputRadioButton = _radioButtonStreamController.stream.asBroadcastStream();
 
     _listEducationStreamController = StreamController();
     _inputListEducation = _listEducationStreamController.sink;
-    outputListEducation = _listEducationStreamController.stream;
+    outputListEducation = _listEducationStreamController.stream
+        .asBroadcastStream();
 
     _listNewTableStreamController = StreamController();
     _inputListNewTable = _listNewTableStreamController.sink;
-    outputListNewTable = _listNewTableStreamController.stream;
+    outputListNewTable = _listNewTableStreamController.stream
+        .asBroadcastStream();
+
+    _educationEditStreamController = StreamController();
+    _inputEducationEdit = _educationEditStreamController.sink;
+    outputEducationEdit = _educationEditStreamController.stream
+        .asBroadcastStream();
 
     _inputRadioButton.add(groupValueRadio);
     _inputListEducation.add(listNameEducations);
+    _inputEducationEdit.add(eduGroup);
 
     nameKey = GlobalKey<FormState>();
-    getAllEducations();
+    getAll();
+    _inputListEducation.add(listNameEducations);
+  }
+
+  void getAll() async {
+    await getAllEducations();
   }
 
   Future<List<EducationModel>> getAllEducations() async {
@@ -69,15 +87,14 @@ class AddNewGroupController {
   }
 
   void onChangedStage(EducationModel? value) {
-    _closeKeyboard();
+    // _closeKeyboard();
     eduGroup = value;
   }
 
   void onChangedDay(String? day) {
-    _closeKeyboard();
+    // _closeKeyboard();
     dayGroup = day;
   }
-
 
   late String status = StringManager.addNewGroup;
   late int idNewGroup;
@@ -91,19 +108,15 @@ class AddNewGroupController {
       if (arguments is Map) {
         //   ? now add
         getArgsMap(arguments);
-        print(arguments);
+        // print(arguments);
+        _inputEducationEdit.add(eduGroup);
       } else {
-        //   idNewGroup = (arg["idNewGroup"] as int?) ?? 1;
         status = arguments as String;
       }
-
-      // dayGroup = arg["appointmentModel"].day as String?;
-      // timeGroup = arg["appointmentModel"].time as TimeOfDay?;
-      // nameEditingController.text = (arg["groupModel"].name as String?) ?? "";
-      // descEditingController.text = (arg["groupModel"].note as String?) ?? "";
-      // eduGroup = arg["groupModel"] as int;
     }
   }
+
+  late GroupModel groupModel;
 
   void getArgsMap(var arguments) {
     if (arguments.containsKey("status")) {
@@ -115,9 +128,21 @@ class AddNewGroupController {
             arguments["fkModel"].appointments as List<AppointmentModel>;
         _inputListNewTable.add(listAppointment);
 
-        GroupModel groupModel = arguments["fkModel"].groupModel as GroupModel;
+        groupModel = arguments["fkModel"].groupModel as GroupModel;
+        print("groupModel=================");
+        print(groupModel);
         nameEditingController.text = groupModel.name;
         descEditingController.text = groupModel.note ?? "";
+        int? eduId = arguments["fkModel"].groupModel.educationFKId as int?;
+        // log(listNameEducations.toString());
+        List listEdu = listNameEducations
+            .where((element) => element.id == eduId)
+            .toList();
+
+        if (listEdu.isNotEmpty) {
+          eduGroup = listEdu[0];
+          _inputEducationEdit.add(eduGroup);
+        }
       }
     }
   }
@@ -128,11 +153,12 @@ class AddNewGroupController {
   }
 
   void _closeKeyboard() {
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     FocusScope.of(context).unfocus();
   }
 
   Future<void> onPressedChooseTime() async {
-    _closeKeyboard();
+    // _closeKeyboard();
 
     TimeOfDay? time = await showTimePicker(
       context: context,
@@ -163,11 +189,8 @@ class AddNewGroupController {
           day: dayGroup!,
           time: convertTimeOfDayToString(timeGroup!),
           tPMorAM: periodForTimeOfDay(timeGroup!),
-          // groupIdFK: idNewGroup,
-          // appointmentId: 100, //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ),
       );
-      print(listAppointment.last.groupIdFK);
       _inputListNewTable.add(listAppointment);
     }
   }
@@ -175,13 +198,14 @@ class AddNewGroupController {
   Future<void> onPressedDeleteRecord(int index) async {
     AppointmentOperations appointmentOperations = AppointmentOperations();
 
-    bool x = await appointmentOperations.deleteFromAppointmentTable(
+    await appointmentOperations.deleteFromAppointmentTable(
       listAppointment[index],
     );
-    print(x);
 
     listAppointment.removeAt(index);
     _inputListNewTable.add(listAppointment);
+    print("listAppointment");
+    print(listAppointment);
   }
 
   Future<void> onPressedSaveAll() async {
@@ -196,14 +220,65 @@ class AddNewGroupController {
           educationFKId: eduGroup!.id,
         ),
       );
-      print(x);
       if (listAppointment.isNotEmpty) {
-        print(listAppointment);
         for (AppointmentModel element in listAppointment) {
           AppointmentOperations appointmentOperations = AppointmentOperations();
           await appointmentOperations.insertToAppointmentTable(element, x);
         }
       }
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("املأ الحقول يا محترم"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> editOrSaveAll() async {
+    if (status == StringManager.editThisGroup) {
+      await edit();
+    } else {
+      await onPressedSaveAll();
+    }
+  }
+
+  Future<void> edit() async {
+    print("Now Edit");
+    print(listAppointment);
+    GroupOperations groupOperations = GroupOperations();
+    if (listAppointment.isNotEmpty) {
+      //? String nameGroup=nameEditingController.text.trim();
+      GroupModel g = GroupModel(
+        id: groupModel.id,
+        educationFKId: eduGroup!.id,
+        name: nameEditingController.text.trim(),
+        note: descEditingController.text.trim(),
+      );
+      print(nameEditingController.text.trim());
+      print(descEditingController.text.trim());
+      log(g.toString());
+      bool x = await groupOperations.updateGroupTable(g);
+      print("$x  ()++> groupModel");
+
+      AppointmentOperations appointmentOperations = AppointmentOperations();
+      bool deleteAll = await appointmentOperations.deleteAllAppointmentForGroup(
+        g,
+      );
+      print("deleteAll= $deleteAll");
+
+      if (listAppointment.isNotEmpty) {
+        for (AppointmentModel element in listAppointment) {
+          AppointmentOperations appointmentOperations = AppointmentOperations();
+          await appointmentOperations.insertToAppointmentTable(
+            element,
+            groupModel.id,
+          );
+        }
+      }
+
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
