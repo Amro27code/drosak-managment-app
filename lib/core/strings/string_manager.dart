@@ -42,4 +42,6 @@ class StringManager {
 
   static  const String remove="حذف";
 
+  static String students="الطلاب";
+
 }

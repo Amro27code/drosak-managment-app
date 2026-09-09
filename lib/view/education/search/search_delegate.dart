@@ -1,18 +1,10 @@
-import 'package:drosak_managment_app/controller/mainScreens/education_controller.dart';
 import 'package:drosak_managment_app/core/resources/color_manager.dart';
-import 'package:drosak_managment_app/view/education/search/custom_result_search_models.dart';
 import 'package:flutter/material.dart';
-import '../../../core/database/education_db.dart';
-import '../../../model/education/education_model.dart';
 
 class EducationSearchDelegate extends SearchDelegate<String> {
-  EducationSearchDelegate({
-    required this.deleteEduDismiss,
-    required this.updateEduDismiss,
-  });
+  EducationSearchDelegate({required this.myBuildResult});
 
-  final Function(EducationModel) deleteEduDismiss;
-  final Function(EducationModel) updateEduDismiss;
+  Widget Function(String query) myBuildResult;
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -49,7 +41,6 @@ class EducationSearchDelegate extends SearchDelegate<String> {
   Widget? buildLeading(BuildContext context) {
     return IconButton(
       onPressed: () {
-        // Navigator.pop(context); NOOO
         close(context, "");
       },
       icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -58,18 +49,7 @@ class EducationSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    EducationOperations educationOperations = EducationOperations();
-    return query.isEmpty
-        ? Center(
-            child: Text("D.N.E", style: TextStyle(color: Colors.white)),
-          )
-        : CustomResultSearchModels(
-            getListSearch: educationOperations.selectSearchEducations(
-              query: query,
-            ),
-            onDismissedDeleteFun: deleteEduDismiss, //(EducationModel p1) {},
-            onDismissedUpdateFun: updateEduDismiss, //(EducationModel p1) {},
-          );
+    return myBuildResult(query);
   }
 
   @override

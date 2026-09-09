@@ -81,14 +81,7 @@ class ItemBuilderEducation extends StatelessWidget {
         }
         return confirmDelete;
       },
-      // onDismissed: (direction) async {
-      //   print(direction);
-      //   if (direction == DismissDirection.startToEnd) {
-      //     await onDismissedDeleteFun(educationModel);
-      //   } else {
-      //     await onDismissedUpdateFun(educationModel);
-      //   }
-      // },
+
       background: Container(
         color: Colors.red,
         alignment: .centerLeft,

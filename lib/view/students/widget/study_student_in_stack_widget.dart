@@ -16,15 +16,14 @@ import '../../../core/strings/font_manager.dart';
 import '../../../model/group/fk_group_appointment.dart';
 import '../../../model/group/time_of_day_model.dart';
 
-class StudyGroupInStackWidget extends StatelessWidget {
-  const StudyGroupInStackWidget({
+class StudyStudentInStackWidget extends StatelessWidget {
+  const StudyStudentInStackWidget({
     super.key,
     required this.groupModel,
     this.streamTableList,
     required this.editFun,
     required this.deleteFun,
-    // this.imagePath,
-    // this.containsImage = false,
+    this.imagePath,
   });
 
   final FkGroupAppointment groupModel;
@@ -32,8 +31,7 @@ class StudyGroupInStackWidget extends StatelessWidget {
   final VoidCallback editFun;
   final VoidCallback deleteFun;
 
-  // final String? imagePath;
-  // final bool containsImage;
+  final String? imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +72,7 @@ class StudyGroupInStackWidget extends StatelessWidget {
                       Expanded(
                         child: Text(
                           groupModel.groupModel.name,
-                          textAlign: .end,
+                          textAlign: .start,
                           style: TextStyle(
                             fontSize: FontSizeManager.s16,
                             color: Colors.white,
@@ -84,48 +82,77 @@ class StudyGroupInStackWidget extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      PopupMenuButton(
-                        //! اسحبه
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            onTap: editFun,
-                            child: Text(StringManager.edit),
-                          ),
-                          PopupMenuItem(
-                            onTap: deleteFun,
-                            child: Text(StringManager.remove),
-                          ),
-                        ],
-                        child: Icon(
-                          Icons.more_horiz_outlined,
-                          color: Colors.white,
-                        ),
-                      ),
-                      //! if (containsImage==true)
-                      //   ClipRRect(
-                      //     borderRadius: BorderRadius.circular(CircleRadiusManager.r50),
-                      //     child: imagePath == null
-                      //         ? SvgPicture.asset(
-                      //       AssetsValueManager.bnb3,
-                      //       height: HeightManager.h64,
-                      //       width: WidthManager.w64,
-                      //     )
-                      //         : Image.file(
-                      //       File(imagePath!),
-                      //       height: HeightManager.h64,
-                      //       fit: .cover,
-                      //       width: WidthManager.w64,
-                      //       errorBuilder: (context, error, stackTrace) =>
-                      //           SvgPicture.asset(
-                      //             AssetsValueManager.bnb3,
-                      //             height: HeightManager.h64,
-                      //             width: WidthManager.w64,
-                      //           ),
+                      //! PopupMenuButton(
+                      //   //! اسحبه
+                      //   itemBuilder: (context) => [
+                      //     PopupMenuItem(
+                      //       onTap: editFun,
+                      //       child: Text(StringManager.edit),
                       //     ),
+                      //     PopupMenuItem(
+                      //       onTap: deleteFun,
+                      //       child: Text(StringManager.remove),
+                      //     ),
+                      //   ],
+                      //   child: Icon(
+                      //     Icons.more_horiz_outlined,
+                      //     color: Colors.white,
                       //   ),
+                      // ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          CircleRadiusManager.r50,
+                        ),
+                        child: imagePath == null
+                            ? SvgPicture.asset(
+                                AssetsValueManager.bnb3,
+                                height: HeightManager.h64,
+                                width: WidthManager.w64,
+                              )
+                            : Image.file(
+                                File(imagePath!),
+                                height: HeightManager.h64,
+                                fit: .cover,
+                                width: WidthManager.w64,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    SvgPicture.asset(
+                                      AssetsValueManager.bnb3,
+                                      height: HeightManager.h64,
+                                      width: WidthManager.w64,
+                                    ),
+                              ),
+                      ),
                     ],
                   ),
                   verticalSpace(height: 5),
+                  // Text(
+                  //   "اسم المرحلة التعليمية ",
+                  //   style: TextStyle(
+                  //     fontSize: FontSizeManager.s16,
+                  //     color: Colors.white,
+                  //     fontWeight: .w500,
+                  //     fontFamily: FontManager.geDinerOne,
+                  //   ),
+                  // ),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "اسم المرحلة التعليمية",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        TextSpan(
+                          text: " / ",
+                          style: TextStyle(color: Colors.white38),
+                        ),
+                        TextSpan(
+                          text: "اسم المجموعة",
+                          style: TextStyle(color: ColorManager.primary),
+                        ),
+                      ],
+                    ),
+                  ),
+                  verticalSpace(height: 15),
                   //! TABLE
                   CustomTableWidget(
                     secondaryRowColor: Colors.white,

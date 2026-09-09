@@ -115,7 +115,7 @@ class MySqfliteDatabase extends CRUD {
     await initDatabase();
     int inserted = await _database!.insert(tableName, values);
     await _database!.close();
-    return inserted ;//== 0 ? false : true;
+    return inserted; //== 0 ? false : true;
   }
 
   @override
@@ -151,6 +151,16 @@ class MySqfliteDatabase extends CRUD {
       where: where, //"$eduTitleColumn LIKE ? AND $statusColumn==?",
       whereArgs: whereArgs, //['%$query%', '1'],
     );
+    await _database!.close();
+    return data;
+  }
+
+  Future<List<Map<String, Object?>>> selectWithStatus({
+    required String query,
+  }) async {
+    await initDatabase();
+
+    List<Map<String, Object?>> data = await _database!.rawQuery(query);
     await _database!.close();
     return data;
   }

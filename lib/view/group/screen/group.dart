@@ -29,14 +29,12 @@ class _GroupState extends State<Group> {
       backgroundColor: ColorManager.black,
       appBar: CustomAppBar(
         title: StringManager.bnb2,
-        onTapSearch: () {},
+        onTapSearch: _groupController.searchGroup,
         onTapAdd: () {
           _groupController.onTapAdd();
         },
       ),
       body: BodyGroupScreen(
-        // deleteFun: ,
-        // editFun: _groupController.editFun,
         onRefresh: _groupController.onRefresh,
         groupListStream: _groupController.outputGroupList,
         streamTableList: _groupController.outputFk,

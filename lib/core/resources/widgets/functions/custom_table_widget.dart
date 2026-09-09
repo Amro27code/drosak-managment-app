@@ -1,6 +1,5 @@
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:drosak_managment_app/model/group/fk_group_appointment.dart';
-import 'package:drosak_managment_app/model/group/group_model.dart';
 import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,7 @@ class CustomTableWidget extends StatelessWidget {
     this.primaryRowColor = ColorManager.primary,
     this.secondaryRowColor = ColorManager.primary,
     required this.isEdit,
-    required this.streamTableList,
+    this.streamTableList,
     this.onPressedDelete,
     this.groupId,
     this.notStream = false,
@@ -26,7 +25,7 @@ class CustomTableWidget extends StatelessWidget {
   final Color primaryRowColor;
   final int? groupId;
   final Color secondaryRowColor;
-  final Stream<List<AppointmentModel>> streamTableList;
+  final Stream<List<AppointmentModel>>? streamTableList;
   final FkGroupAppointment? fkList;
 
   // final int lengthSecondaryRow;
@@ -143,7 +142,7 @@ class CustomTableWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                          if (isEdit || onPressedDelete == null)
+                          if (isEdit || onPressedDelete != null)
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 vertical: PaddingManager.p4,

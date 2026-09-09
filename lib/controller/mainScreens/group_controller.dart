@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:drosak_managment_app/core/database/appointment_db.dart';
 import 'package:drosak_managment_app/core/database/group_db.dart';
 import 'package:drosak_managment_app/core/resources/routes_manager.dart';
@@ -9,6 +8,8 @@ import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/strings/string_manager.dart';
+import '../../view/education/search/search_delegate.dart';
+import '../../view/group/widget/custom_search_delegate.dart';
 
 class GroupController {
   BuildContext context;
@@ -26,6 +27,8 @@ class GroupController {
   List<FkGroupAppointment> fkList = [];
 
   List<AppointmentModel> appointmentList = [];
+
+  bool isSearchNow = false;
 
   GroupController(this.context) {
     init();
@@ -55,15 +58,15 @@ class GroupController {
       context,
       RouteNames.addNewGroup,
       arguments:
-      // {
-      //   "idNewGroup": newId,
-      //   "status":
-      StringManager.addNewGroup,
+          // {
+          //   "idNewGroup": newId,
+          //   "status":
+          StringManager.addNewGroup,
       // }, //groupList.isEmpty ? 1 : groupList.last.id + 1,
     ).then((value) => getAllData());
   }
 
-  void getAllData() async {
+  Future<List<FkGroupAppointment>> getAllData() async {
     //!    جرب انقله الى ال group db
     List<FkGroupAppointment> fkList = [];
     GroupOperations groupOperations = GroupOperations();
@@ -82,7 +85,36 @@ class GroupController {
       );
       _inputGroupList.add(fkList);
     }
-    // log(fkList.toString());
+
+    print(fkList);
+    return fkList;
+  }
+
+  Future<List<FkGroupAppointment>> getAllDataOnSearch(String query) async {
+    List<FkGroupAppointment> fkList = [];
+    GroupOperations groupOperations = GroupOperations();
+    groupList = await groupOperations.selectNameGroups(query);
+
+    for (GroupModel item in groupList) {
+      appointmentList.clear();
+      AppointmentOperations appointmentOperations = AppointmentOperations();
+      appointmentList += await appointmentOperations.selectAppointmentForGroup(
+        groupId: item.id,
+      );
+
+      List<AppointmentModel> listWhereAppointment = appointmentList
+          .where((element) => element.groupIdFK == item.id)
+          .toList();
+      fkList.add(
+        FkGroupAppointment(
+          groupModel: item,
+          appointments: listWhereAppointment,
+        ),
+      );
+    }
+    _inputGroupList.add(fkList);
+
+    return fkList;
   }
 
   void addController() {
@@ -92,11 +124,12 @@ class GroupController {
   Future<void> onRefresh() async {
     fkList.clear();
     _inputGroupList.add(fkList);
-    getAllData();
+
+    await getAllData();
   }
 
   void deleteFun(FkGroupAppointment fkAGModel) async {
-    await showDialog(
+    bool? confirmDelete = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text("هل تريد الحذف ؟"),
@@ -104,16 +137,16 @@ class GroupController {
           TextButton(
             onPressed: () async {
               GroupOperations groupOperations = GroupOperations();
-              bool x = await groupOperations.deleteFromGroupTable(
+              bool deleted = await groupOperations.deleteFromGroupTable(
                 fkAGModel.groupModel,
               );
-              print(x);
-              if (x) {
+              print(deleted);
+              if (deleted) {
                 init();
                 await onRefresh();
                 fkList.remove(fkAGModel);
                 _inputGroupList.add(fkList);
-                Navigator.of(context).pop(true);
+                Navigator.of(context).pop(isSearchNow ? true : false);
               }
             },
             child: Text("نعم"),
@@ -127,6 +160,11 @@ class GroupController {
         ],
       ),
     );
+
+    if (confirmDelete ?? false) {
+      Navigator.pop(context);
+      isSearchNow = false;
+    }
   }
 
   void editFun(FkGroupAppointment model) {
@@ -135,6 +173,34 @@ class GroupController {
           RouteNames.addNewGroup,
           arguments: {"status": StringManager.editThisGroup, "fkModel": model},
         )
-        .then((value) => getAllData());
+        .then((value) {
+          getAllData();
+          if (isSearchNow) {
+            Navigator.pop(context);
+            isSearchNow = false;
+          }
+        });
+  }
+
+  void searchGroup() {
+    showSearch(
+      context: context,
+      delegate: EducationSearchDelegate(myBuildResult: groupResultSearch),
+    ).then((value) async {
+      await init();
+      isSearchNow = true;
+    });
+  }
+
+  Widget groupResultSearch(String query) {
+    return query.isEmpty
+        ? Center(
+            child: Text("D.N.E", style: TextStyle(color: Colors.white)),
+          )
+        : CustomResultSearchModelsGroup(
+            getListSearch: getAllDataOnSearch(query),
+            onDeleteFun: deleteFun,
+            onUpdateFun: editFun,
+          );
   }
 }

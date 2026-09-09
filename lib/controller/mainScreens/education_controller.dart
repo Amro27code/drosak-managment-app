@@ -9,6 +9,7 @@ import 'package:drosak_managment_app/model/education/education_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../view/education/search/custom_result_search_models.dart';
 import '../../view/education/search/search_delegate.dart';
 import '../../view/education/widgets/add_education_sheet_widget.dart';
 
@@ -257,13 +258,25 @@ class EducationController {
     showSearch(
       context: context,
       delegate: EducationSearchDelegate(
-        deleteEduDismiss: deleteEducationFun,
-        updateEduDismiss: updateEducationFun,
+        myBuildResult:eduResult
       ),
     ).then((value) => getAllEducations());
     // _listEducationInputController.add(educationList);
   }
-
+Widget eduResult(String query){
+  EducationOperations educationOperations = EducationOperations();
+  return query.isEmpty
+      ? Center(
+    child: Text("D.N.E", style: TextStyle(color: Colors.white)),
+  )
+      : CustomResultSearchModels(
+    getListSearch: educationOperations.selectSearchEducations(
+      query: query,
+    ),
+    onDismissedDeleteFun: deleteEducationFun, //(EducationModel p1) {},
+    onDismissedUpdateFun: updateEducationFun, //(EducationModel p1) {},
+  );
+}
   Future<void> deleteEducationFun(EducationModel educationModel) async {
     EducationOperations educationOperations = EducationOperations();
 
