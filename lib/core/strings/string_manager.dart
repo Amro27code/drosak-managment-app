@@ -8,6 +8,7 @@ class StringManager {
   static const String bnb2 = "المجموعات";
   static const String addNewGroup = "إضافة مجموعة جديدة";
   static const String editThisGroup = "تعديل تلك المجموعة";
+  static const String editThisStudent = "تعديل بيانات الطالب";
   static const String bnb1 = "المراحل التعليمية";
   static const String groupName = "اسم المجموعة";
   static const String addBnb1Name = "إسم المرحلة التعليمية";
@@ -26,7 +27,7 @@ class StringManager {
   static const String pm = "م";
   static const String am = "ص";
   static const String choose = "إختار";
-  static const String cancel="إلغاء";
+  static const String cancel = "إلغاء";
 
   static const List<String> days = [
     "الاحد",
@@ -40,8 +41,9 @@ class StringManager {
 
   static const String indexScreen = "indexScreen";
 
-  static  const String remove="حذف";
+  static const String remove = "حذف";
 
-  static String students="الطلاب";
+  static String students = "الطلاب";
 
+  static String addNewStudent = "إضافة طالب جديد";
 }

@@ -6,6 +6,7 @@ import 'package:drosak_managment_app/view/group/appBar%20screens/create_group_sc
 import 'package:drosak_managment_app/view/group/screen/group.dart';
 import 'package:drosak_managment_app/view/main/screen/main_screen.dart';
 import 'package:drosak_managment_app/view/on_boarding/screens/on_boarding_screen.dart';
+import 'package:drosak_managment_app/view/students/appBarScreens/create_student_screen.dart';
 import 'package:drosak_managment_app/view/students/screen/students.dart';
 import 'package:flutter/material.dart';
 import '../../view/splash screen/screens/splash_screen.dart';
@@ -22,6 +23,7 @@ class RoutesManager {
     RouteNames.education: (context) => const Education(),
     RouteNames.audience: (context) => const Audience(),
     RouteNames.addNewGroup: (context) => const CreateGroupScreen(),
+    RouteNames.addNewStudent: (context) => const CreateStudentScreen(),
   };
 }
 
@@ -36,4 +38,5 @@ class RouteNames {
   static const String audience = "aud";
   static const String attendance = "att";
   static const String addNewGroup = "addGroup";
+  static const String addNewStudent = "addStudent";
 }

@@ -27,6 +27,14 @@ class MySqfliteDatabase extends CRUD {
   static const String appointmentPMorAMColumn = "appointmentPMorAM";
   static const String appointmentGroupFKColumn = "groupID";
 
+  //?===================Student=======================
+  static const String studentTable = "Student";
+  static const String studentIdColumn = "studentId";
+  static const String studentNoteColumn = "studentNote";
+  static const String studentNameColumn = "studentName";
+  static const String studentImagePathColumn = "studentImagePath";
+  static const String studentGroupFKColumn = "groupIDFK";
+
   sqflite.Database? _database;
 
   Future<sqflite.Database> initDatabase() async {
@@ -35,7 +43,7 @@ class MySqfliteDatabase extends CRUD {
     String drosakDatabaseName = "drosak.db";
     String myPath = join(path, drosakDatabaseName);
 
-    int version = 1;
+    int version = 2;
     _database ??= await sqflite.openDatabase(
       myPath,
       version: version,
@@ -45,6 +53,7 @@ class MySqfliteDatabase extends CRUD {
         await db.execute("DROP TABLE IF EXISTS $eduTable");
         await db.execute("DROP TABLE IF EXISTS $groupTable");
         await db.execute("DROP TABLE IF EXISTS $appointmentTable");
+        await db.execute("DROP TABLE IF EXISTS $studentTable");
 
         await tablesCreate(db);
 
@@ -90,6 +99,19 @@ class MySqfliteDatabase extends CRUD {
       "$appointmentPMorAMColumn TEXT,"
       "$appointmentGroupFKColumn INTEGER,"
       "CONSTRAINT appointment_group FOREIGN KEY ($appointmentGroupFKColumn) REFERENCES $groupTable ($groupIdColumn) ON DELETE CASCADE ON UPDATE CASCADE"
+      ");",
+    );
+
+    /// ==================== create Student table==============
+
+    await db.execute(
+      "CREATE TABLE IF NOT EXISTS $studentTable"
+      " ($studentIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "$studentNameColumn TEXT,"
+      "$studentNoteColumn TEXT,"
+      "$studentImagePathColumn TEXT,"
+      "$studentGroupFKColumn INTEGER,"
+      "CONSTRAINT student_group FOREIGN KEY ($studentGroupFKColumn) REFERENCES $groupTable ($groupIdColumn) ON DELETE CASCADE ON UPDATE CASCADE"
       ");",
     );
   }

@@ -1,3 +1,26 @@
+// import 'package:flutter/material.dart';
+//
+// class AddNewStudentController {
+//   late BuildContext _context;
+//
+//   late TextEditingController nameEditingController;
+//   late TextEditingController noteEditingController;
+//
+//   late GlobalKey<FormState> nameKey;
+//
+//   AddNewStudentController(BuildContext context) {
+//     _context = context;
+//     init();
+//   }
+//
+//   void init() {
+//     nameEditingController = TextEditingController();
+//     noteEditingController = TextEditingController();
+//     nameKey = GlobalKey();
+//   }
+//
+//   void getArgsFromBackScreen() {}
+// }
 import 'dart:async';
 import 'dart:developer';
 import 'package:drosak_managment_app/core/database/appointment_db.dart';
@@ -11,12 +34,12 @@ import 'package:flutter/material.dart';
 import '../../core/database/education_db.dart';
 import '../../model/education/education_model.dart';
 
-class AddNewGroupController {
+class AddNewStudentController {
   BuildContext context;
 
   List<AppointmentModel> listAppointment = [];
   late TextEditingController nameEditingController;
-  late TextEditingController descEditingController;
+  late TextEditingController noteEditingController;
 
   late StreamController<String?> _radioButtonStreamController;
   late Sink<String?> _inputRadioButton;
@@ -43,9 +66,9 @@ class AddNewGroupController {
   EducationModel? eduGroup;
   String? groupValueRadio = StringManager.am;
 
-  AddNewGroupController(this.context) {
+  AddNewStudentController(this.context) {
     nameEditingController = TextEditingController();
-    descEditingController = TextEditingController();
+    noteEditingController = TextEditingController();
 
     _radioButtonStreamController = StreamController();
     _inputRadioButton = _radioButtonStreamController.sink;
@@ -96,7 +119,7 @@ class AddNewGroupController {
     dayGroup = day;
   }
 
-  late String status = StringManager.addNewGroup;
+  late String status = StringManager.addNewStudent;
   late int idNewGroup;
 
   //? getArgsFromBackScreen
@@ -125,14 +148,14 @@ class AddNewGroupController {
     if (arguments.containsKey("fkModel")) {
       if (arguments["fkModel"] is FkGroupAppointment) {
         listAppointment =
-            arguments["fkModel"].appointments as List<AppointmentModel>;
+        arguments["fkModel"].appointments as List<AppointmentModel>;
         _inputListNewTable.add(listAppointment);
 
         groupModel = arguments["fkModel"].groupModel as GroupModel;
         print("groupModel=================");
         print(groupModel);
         nameEditingController.text = groupModel.name;
-        descEditingController.text = groupModel.note ?? "";
+        noteEditingController.text = groupModel.note ?? "";
         int? eduId = arguments["fkModel"].groupModel.educationFKId as int?;
         // log(listNameEducations.toString());
         List listEdu = listNameEducations
@@ -215,7 +238,7 @@ class AddNewGroupController {
       int x = await groupOperations.insertToGroupTable(
         GroupModel(
           name: nameEditingController.text.trim(),
-          note: descEditingController.text.trim(),
+          note: noteEditingController.text.trim(),
           // id: 0,
           educationFKId: eduGroup!.id,
         ),
@@ -238,7 +261,7 @@ class AddNewGroupController {
   }
 
   Future<void> editOrSaveAll() async {
-    if (status == StringManager.editThisGroup) {
+    if (status == StringManager.editThisStudent) {
       await edit();
     } else {
       await onPressedSaveAll();
@@ -255,10 +278,10 @@ class AddNewGroupController {
         id: groupModel.id,
         educationFKId: eduGroup!.id,
         name: nameEditingController.text.trim(),
-        note: descEditingController.text.trim(),
+        note: noteEditingController.text.trim(),
       );
       print(nameEditingController.text.trim());
-      print(descEditingController.text.trim());
+      print(noteEditingController.text.trim());
       log(g.toString());
       bool x = await groupOperations.updateGroupTable(g);
       print("$x  ()++> groupModel");
@@ -303,5 +326,4 @@ class AddNewGroupController {
 
 
   }
-
 }

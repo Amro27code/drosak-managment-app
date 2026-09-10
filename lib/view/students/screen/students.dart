@@ -27,7 +27,7 @@ class _StudentsState extends State<Students> {
       appBar: CustomAppBar(
         title: StringManager.students,
         onTapSearch: () {},
-        onTapAdd: () {},
+        onTapAdd:_studentController.onTapAdd,
       ),
       body: BodyStudent(
         onRefresh: () async {},
