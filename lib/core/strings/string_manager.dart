@@ -14,6 +14,7 @@ class StringManager {
   static const String addBnb1Name = "إسم المرحلة التعليمية";
   static const String addBnb1Desc = "وصف المرحلة التعليمية";
   static const String chooseEduStage = "إختر المرحلة التعليمية";
+  static const String chooseGroup = "إختر الجموعة";
   static const String add = "إضافة";
   static const String edit = "تعديل";
   static const String notes = "الملاحظات";
@@ -46,4 +47,11 @@ class StringManager {
   static String students = "الطلاب";
 
   static String addNewStudent = "إضافة طالب جديد";
+
+  static String studentName="اسم الطالب";
+
+  static String date="تاريخ التسجيل";
+
+  static String phoneNumber="رقم الهاتف";
+
 }

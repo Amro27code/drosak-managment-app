@@ -8,7 +8,7 @@ import '../../../strings/font_manager.dart';
 TextFormField customTextField({
   required String? hintText,
   required TextEditingController controller,
-  required ValueChanged<String> onSubmitted,
+   ValueChanged<String>? onSubmitted,
   required FormFieldValidator<String>? validator,
 
   int maxLines = 1,

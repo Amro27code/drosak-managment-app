@@ -9,6 +9,7 @@ import 'package:drosak_managment_app/model/education/education_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../core/resources/widgets/dialog/show_dialog_widget.dart';
 import '../../view/education/search/custom_result_search_models.dart';
 import '../../view/education/search/search_delegate.dart';
 import '../../view/education/widgets/add_education_sheet_widget.dart';
@@ -66,19 +67,18 @@ class EducationController {
   }
 
   Future<void> init() async {
-
     initControllers();
-   _nameTextEditingController = TextEditingController();
+    _nameTextEditingController = TextEditingController();
     _descTextEditingController = TextEditingController();
     educationOperations = EducationOperations();
     //! educationList = await educationOperations.selectSearchEducations();
     // !educationList.clear();
     //     listEducationInputController.add(educationList);
     //! await getAllEducations();
-     educationList = await educationOperations.selectSearchEducations();
+    educationList = await educationOperations.selectSearchEducations();
     educationList.clear();
-        listEducationInputController.add(educationList);
-     await getAllEducations();
+    listEducationInputController.add(educationList);
+    await getAllEducations();
     print(educationList);
   }
 
@@ -87,8 +87,8 @@ class EducationController {
     _imageInputController.add(pathImagePicker);
     //! _nameTextEditingController.clear();
     //! _descTextEditingController.clear();
-     _nameTextEditingController.clear();
-     _descTextEditingController.clear();
+    _nameTextEditingController.clear();
+    _descTextEditingController.clear();
     showModalBottomSheet(
       context: context,
       backgroundColor: ColorManager.black,
@@ -146,67 +146,7 @@ class EducationController {
   }
 
   void pickImageMethod() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context1) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: .spaceEvenly,
-            children: [
-              IconButton.filled(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorManager.primary,
-                  foregroundColor: Colors.white,
-                  iconSize: 40,
-                ),
-                onPressed: () {
-                  pickImage(imageSource: .camera);
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.camera_alt_outlined),
-              ),
-              IconButton.filled(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorManager.primary,
-                  foregroundColor: Colors.white,
-                  iconSize: 40,
-                ),
-                onPressed: () {
-                  pickImage(imageSource: .gallery);
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.image),
-              ),
-            ],
-          ),
-          icon: Row(
-            mainAxisAlignment: .spaceBetween,
-            children: [
-              IconButton.filled(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  iconSize: 10,
-                ),
-                onPressed: () {
-                  Navigator.pop(context1);
-                },
-                icon: Icon(Icons.close),
-              ),
-              Text(
-                "اختر من...",
-                style: TextStyle(
-                  fontWeight: .w900,
-                  fontSize: FontSizeManager.s15,
-                  fontFamily: FontManager.geDinerOne,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+    showDialogPickImageMethod(context: context, onPressedPickImage: pickImage);
   }
 
   Future<void> saveImageOfMyApp(XFile image) async {
@@ -257,26 +197,26 @@ class EducationController {
   void onTapSearch() {
     showSearch(
       context: context,
-      delegate: EducationSearchDelegate(
-        myBuildResult:eduResult
-      ),
+      delegate: EducationSearchDelegate(myBuildResult: eduResult),
     ).then((value) => getAllEducations());
     // _listEducationInputController.add(educationList);
   }
-Widget eduResult(String query){
-  EducationOperations educationOperations = EducationOperations();
-  return query.isEmpty
-      ? Center(
-    child: Text("D.N.E", style: TextStyle(color: Colors.white)),
-  )
-      : CustomResultSearchModels(
-    getListSearch: educationOperations.selectSearchEducations(
-      query: query,
-    ),
-    onDismissedDeleteFun: deleteEducationFun, //(EducationModel p1) {},
-    onDismissedUpdateFun: updateEducationFun, //(EducationModel p1) {},
-  );
-}
+
+  Widget eduResult(String query) {
+    EducationOperations educationOperations = EducationOperations();
+    return query.isEmpty
+        ? Center(
+            child: Text("D.N.E", style: TextStyle(color: Colors.white)),
+          )
+        : CustomResultSearchModels(
+            getListSearch: educationOperations.selectSearchEducations(
+              query: query,
+            ),
+            onDismissedDeleteFun: deleteEducationFun, //(EducationModel p1) {},
+            onDismissedUpdateFun: updateEducationFun, //(EducationModel p1) {},
+          );
+  }
+
   Future<void> deleteEducationFun(EducationModel educationModel) async {
     EducationOperations educationOperations = EducationOperations();
 
@@ -348,7 +288,6 @@ Widget eduResult(String query){
   }
 
   Future<void> onRefresh() async {
-
     // await getAllEducations();
     // await init();
     Future.delayed(Duration(seconds: 1));

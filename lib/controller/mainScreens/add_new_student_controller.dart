@@ -1,28 +1,6 @@
-// import 'package:flutter/material.dart';
-//
-// class AddNewStudentController {
-//   late BuildContext _context;
-//
-//   late TextEditingController nameEditingController;
-//   late TextEditingController noteEditingController;
-//
-//   late GlobalKey<FormState> nameKey;
-//
-//   AddNewStudentController(BuildContext context) {
-//     _context = context;
-//     init();
-//   }
-//
-//   void init() {
-//     nameEditingController = TextEditingController();
-//     noteEditingController = TextEditingController();
-//     nameKey = GlobalKey();
-//   }
-//
-//   void getArgsFromBackScreen() {}
-// }
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:drosak_managment_app/core/database/appointment_db.dart';
 import 'package:drosak_managment_app/core/database/group_db.dart';
 import 'package:drosak_managment_app/core/resources/widgets/functions/convert_time_of_period_to_string.dart';
@@ -31,7 +9,13 @@ import 'package:drosak_managment_app/model/group/fk_group_appointment.dart';
 import 'package:drosak_managment_app/model/group/group_model.dart';
 import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../core/database/education_db.dart';
+import '../../core/numbers/font_size_manager.dart';
+import '../../core/resources/color_manager.dart';
+import '../../core/resources/widgets/dialog/show_dialog_widget.dart';
+import '../../core/strings/font_manager.dart';
 import '../../model/education/education_model.dart';
 
 class AddNewStudentController {
@@ -41,9 +25,8 @@ class AddNewStudentController {
   late TextEditingController nameEditingController;
   late TextEditingController noteEditingController;
 
-  late StreamController<String?> _radioButtonStreamController;
-  late Sink<String?> _inputRadioButton;
-  late Stream<String?> outputRadioButton;
+  late TextEditingController phoneNumberEditingController;
+  late TextEditingController dateTextEditingController;
 
   late StreamController<List<EducationModel>> _listEducationStreamController;
   late Sink<List<EducationModel>> _inputListEducation;
@@ -53,31 +36,35 @@ class AddNewStudentController {
   late Sink<EducationModel?> _inputEducationEdit;
   late Stream<EducationModel?> outputEducationEdit;
 
+  late StreamController<String?> _imageStreamController;
+  late Sink<String?> _imageInputController;
+  late Stream<String?> imageOutputController;
   late StreamController<List<AppointmentModel>> _listNewTableStreamController;
   late Sink<List<AppointmentModel>> _inputListNewTable;
   late Stream<List<AppointmentModel>> outputListNewTable;
 
   late GlobalKey<FormState> nameKey;
+  late GlobalKey<FormState> phoneKey;
 
   List<EducationModel> listNameEducations = [];
 
-  TimeOfDay? timeGroup;
-  String? dayGroup;
+  String? imagePath;
   EducationModel? eduGroup;
-  String? groupValueRadio = StringManager.am;
 
   AddNewStudentController(this.context) {
     nameEditingController = TextEditingController();
     noteEditingController = TextEditingController();
-
-    _radioButtonStreamController = StreamController();
-    _inputRadioButton = _radioButtonStreamController.sink;
-    outputRadioButton = _radioButtonStreamController.stream.asBroadcastStream();
+    phoneNumberEditingController = TextEditingController();
+    dateTextEditingController = TextEditingController();
 
     _listEducationStreamController = StreamController();
     _inputListEducation = _listEducationStreamController.sink;
     outputListEducation = _listEducationStreamController.stream
         .asBroadcastStream();
+
+    _imageStreamController = StreamController();
+    _imageInputController = _imageStreamController.sink;
+    imageOutputController = _imageStreamController.stream.asBroadcastStream();
 
     _listNewTableStreamController = StreamController();
     _inputListNewTable = _listNewTableStreamController.sink;
@@ -89,11 +76,11 @@ class AddNewStudentController {
     outputEducationEdit = _educationEditStreamController.stream
         .asBroadcastStream();
 
-    _inputRadioButton.add(groupValueRadio);
     _inputListEducation.add(listNameEducations);
     _inputEducationEdit.add(eduGroup);
 
     nameKey = GlobalKey<FormState>();
+    phoneKey = GlobalKey<FormState>();
     getAll();
     _inputListEducation.add(listNameEducations);
   }
@@ -112,11 +99,6 @@ class AddNewStudentController {
   void onChangedStage(EducationModel? value) {
     // _closeKeyboard();
     eduGroup = value;
-  }
-
-  void onChangedDay(String? day) {
-    // _closeKeyboard();
-    dayGroup = day;
   }
 
   late String status = StringManager.addNewStudent;
@@ -148,7 +130,7 @@ class AddNewStudentController {
     if (arguments.containsKey("fkModel")) {
       if (arguments["fkModel"] is FkGroupAppointment) {
         listAppointment =
-        arguments["fkModel"].appointments as List<AppointmentModel>;
+            arguments["fkModel"].appointments as List<AppointmentModel>;
         _inputListNewTable.add(listAppointment);
 
         groupModel = arguments["fkModel"].groupModel as GroupModel;
@@ -170,9 +152,34 @@ class AddNewStudentController {
     }
   }
 
-  void onChangedRadio(String? value) {
-    groupValueRadio = value;
-    _inputRadioButton.add(groupValueRadio);
+  void onDeleteImage() {
+    imagePath = null;
+    _imageInputController.add(imagePath);
+  }
+
+  void pickImageMethod() {
+    showDialogPickImageMethod(
+      context: context,
+      onPressedPickImage: pickImage,
+    );
+  }
+
+  Future<void> saveImageOfMyApp(XFile image) async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String pathDirectory = directory.path;
+    final imagePathDirectory = "$pathDirectory/${image.name}";
+    File fileImage = await File(image.path).copy(imagePathDirectory);
+    imagePath = fileImage.path;
+  }
+
+  Future<void> pickImage({required ImageSource imageSource}) async {
+    final picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: imageSource);
+    if (image != null) {
+      imagePath = image.path;
+      saveImageOfMyApp(image);
+    }
+    _imageInputController.add(imagePath);
   }
 
   void _closeKeyboard() {
@@ -180,43 +187,28 @@ class AddNewStudentController {
     FocusScope.of(context).unfocus();
   }
 
-  Future<void> onPressedChooseTime() async {
-    // _closeKeyboard();
-
-    TimeOfDay? time = await showTimePicker(
-      context: context,
-      initialTime: timeGroup ?? TimeOfDay(hour: 1, minute: 0),
-      cancelText: StringManager.cancel,
-      confirmText: StringManager.choose,
-      helpText: StringManager.chooseTime,
-    );
-    if (time != null) {
-      timeGroup = time;
-    }
-  }
-
-  Future<void> onPressedSave() async {
-    if (timeGroup == null ||
-        dayGroup == null ||
-        nameEditingController.text.isEmpty ||
-        eduGroup == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("يجب ملئ كل الحقول المطلوبة"),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } else {
-      listAppointment.add(
-        AppointmentModel(
-          day: dayGroup!,
-          time: convertTimeOfDayToString(timeGroup!),
-          tPMorAM: periodForTimeOfDay(timeGroup!),
-        ),
-      );
-      _inputListNewTable.add(listAppointment);
-    }
-  }
+  // Future<void> onPressedSave() async {
+  //   if (timeGroup == null ||
+  //       dayGroup == null ||
+  //       nameEditingController.text.isEmpty ||
+  //       eduGroup == null) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("يجب ملئ كل الحقول المطلوبة"),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //   } else {
+  //     listAppointment.add(
+  //       AppointmentModel(
+  //         day: dayGroup!,
+  //         time: convertTimeOfDayToString(timeGroup!),
+  //         tPMorAM: periodForTimeOfDay(timeGroup!),
+  //       ),
+  //     );
+  //     _inputListNewTable.add(listAppointment);
+  //   }
+  // }
 
   Future<void> onPressedDeleteRecord(int index) async {
     AppointmentOperations appointmentOperations = AppointmentOperations();
@@ -313,8 +305,7 @@ class AddNewStudentController {
     }
   }
 
-
-  void disposeFunction(){
+  void disposeFunction() {
     _listNewTableStreamController.close();
     _inputListNewTable.close();
 
@@ -323,7 +314,5 @@ class AddNewStudentController {
 
     _listEducationStreamController.close();
     _inputListEducation.close();
-
-
   }
 }

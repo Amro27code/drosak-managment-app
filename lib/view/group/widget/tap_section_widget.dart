@@ -22,36 +22,28 @@ class TapSectionCreateNewGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Form(
-                key: nameKey,
-                child: customTextField(
-                  controller: name,
-                  hintText: StringManager.groupName,
-                  onSubmitted: (value) {},
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "لا يمكن تركه فارغ";
-                    } else {
-                      return null;
-                    }
-                  },
-                ),
-              ),
-            ),
-            horizontalSpace(width: 10),
-            addImageButton(pickImageMethod: () {}),
-          ],
+        Form(
+          key: nameKey,
+          child: customTextField(
+            controller: name,
+            hintText: StringManager.groupName,
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "لا يمكن تركه فارغ";
+              } else {
+                return null;
+              }
+            },
+          ),
         ),
         verticalSpace(height: 21),
         customTextField(
           controller: desc,
           hintText: StringManager.notes,
-          onSubmitted: (value) {},
           maxLines: 3,
-          validator: (String? value) {},
+          validator: (String? value) {
+            return null;
+          },
         ),
       ],
     );
