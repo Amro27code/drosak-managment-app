@@ -4,6 +4,7 @@ import 'package:drosak_managment_app/core/resources/widgets/functions/customText
 import 'package:flutter/material.dart';
 import '../../../core/numbers/circle_radius_manager.dart';
 import '../../../core/numbers/padding_margin_manager.dart';
+import '../../../core/resources/widgets/pickImage/upload_image_style_widget.dart';
 import '../../../core/resources/widgets/space/horizontal_space.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
 import '../../../core/resources/widgets/functions/add_image_button.dart';
@@ -25,12 +26,7 @@ Padding addEducationSheetWidget({
   required GlobalKey<FormState> formKey,
 }) {
   return Padding(
-    padding: EdgeInsets.only(
-      bottom: MediaQuery
-          .of(context)
-          .viewInsets
-          .bottom,
-    ),
+    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
     child: Container(
       constraints: BoxConstraints(maxHeight: HeightManager.h550),
       decoration: BoxDecoration(
@@ -40,32 +36,22 @@ Padding addEducationSheetWidget({
       ),
       padding: EdgeInsets.all(PaddingManager.p30),
       child: Column(
-        // mainAxisAlignment: .center,
         mainAxisSize: .min,
-        // crossAxisAlignment: .center,
         children: [
-          Row(
-            children: [
-              addImageButton(pickImageMethod: pickImageMethod),
-              horizontalSpace(width: 10),
-              Expanded(
-                child: Form(
-                  key: formKey,
-                  child: customTextField(
-                    controller: nameController,
-                    hintText: hintText,
-                    onSubmitted: onSubmitted,
-                    validator: (String? value) {
-                      // if (value == null || value.isEmpty) {
-                      //   return "لا يمكن تركه فارغ";
-                      // } else {
-                      //   return null;
-                      // }
-                    },
-                  ),
-                ),
-              ),
-            ],
+          Form(
+            key: formKey,
+            child: customTextField(
+              controller: nameController,
+              hintText: hintText,
+              onSubmitted: onSubmitted,
+              validator: (String? value) {
+                // if (value == null || value.isEmpty) {
+                //   return "لا يمكن تركه فارغ";
+                // } else {
+                //   return null;
+                // }
+              },
+            ),
           ),
           verticalSpace(height: 12),
           customTextField(
@@ -73,58 +59,56 @@ Padding addEducationSheetWidget({
             hintText: hintTextDesc,
             onSubmitted: onSubmittedDesc,
             maxLines: 3,
-            validator: (String? value) {},
+            validator: (String? value) {
+              return null;
+            },
           ),
-          verticalSpace(height: 40),
+          verticalSpace(height: HeightManager.h25),
 
           StreamBuilder(
             stream: imageStream,
+
             builder: (context, snapShot) {
               if (snapShot.connectionState == ConnectionState.waiting) {
-                return SizedBox();
-                //   Center(
-                //   child: CupertinoActivityIndicator(radius: 20),
-                // );
-              } else
-              if (snapShot.data == null || (snapShot.data ?? "").isEmpty) {
-                return SizedBox();
+                return UploadImageStyleWidget(pickImageMethod: pickImageMethod);
+              } else if (snapShot.data == null ||
+                  (snapShot.data ?? "").isEmpty) {
+                return UploadImageStyleWidget(pickImageMethod: pickImageMethod);
               } else if (snapShot.data != null) {
-                return Column(
+                return Stack(
                   children: [
-                    Stack(
-                      children: [
-                        Image.file(
-                          File(snapShot.data!),
-                          errorBuilder: (context, error, stackTrace) =>
-                              Text(
-                                "Not Found",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                          // width: WidthManager.w32,
-                          height: HeightManager.h200,
-                          width: .infinity,
-                          fit: .cover,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        CircleRadiusManager.r12,
+                      ),
+                      child: Image.file(
+                        File(snapShot.data!),
+                        errorBuilder: (context, error, stackTrace) => Text(
+                          "Not Found",
+                          style: TextStyle(color: Colors.white),
                         ),
-                        // if (snapShot.data != null)
-                        Positioned(
-                          child: IconButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.black45,
-                            ),
-                            onPressed: onDeleteImage,
-                            icon: Icon(Icons.delete, color: Colors.red),
-                          ),
-                        ),
-                      ],
+                        height: HeightManager.h200,
+                        width: .infinity,
+                        fit: .cover,
+                      ),
                     ),
-                    verticalSpace(height: 15),
+                    Positioned(
+                      child: IconButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.black45,
+                        ),
+                        onPressed: onDeleteImage,
+                        icon: Icon(Icons.delete, color: Colors.red),
+                      ),
+                    ),
                   ],
                 );
               } else {
-                return SizedBox();
+                return UploadImageStyleWidget(pickImageMethod: pickImageMethod);
               }
             },
           ),
+          verticalSpace(height: HeightManager.h16),
 
           customAddButton(
             onTapAddInSheet: onTapAddInSheet,
@@ -132,7 +116,6 @@ Padding addEducationSheetWidget({
           ),
         ],
       ),
-      // ),
     ),
   );
 }

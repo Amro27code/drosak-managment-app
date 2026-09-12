@@ -35,6 +35,7 @@ class GroupOperations extends MySqfliteDatabase {
         .toList();
     return groups;
   }
+
   Future<int> insertToGroupTable(GroupModel groupModel) {
     return insert(
       values: groupModel.toJson(),
@@ -55,5 +56,19 @@ class GroupOperations extends MySqfliteDatabase {
       where: "${MySqfliteDatabase.groupIdColumn}=${groupModel.id}",
       tableName: MySqfliteDatabase.groupTable,
     );
+  }
+
+  Future<void> selectGroupsForIdEducation(int id) async {
+    var a = await selectWithStatus(
+      query:
+          "SELECT ${MySqfliteDatabase.groupTable}.*"
+          " FROM ${MySqfliteDatabase.groupTable} "
+          "INNER JOIN ${MySqfliteDatabase.eduTable} "
+          "ON ${MySqfliteDatabase.groupTable}.${MySqfliteDatabase.groupEduFKColumn}==${MySqfliteDatabase.eduTable}.${MySqfliteDatabase.eduIdColumn} "
+          "AND ${MySqfliteDatabase.groupTable}.${MySqfliteDatabase.groupEduFKColumn}==$id",
+    );
+
+    print("eeeeeeeeeeeeeeee");
+    print(a);
   }
 }

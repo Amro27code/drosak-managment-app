@@ -51,6 +51,11 @@ class AddNewStudentController {
   String? imagePath;
   EducationModel? eduGroup;
 
+  late String status = StringManager.addNewStudent;
+  late int idNewGroup;
+
+  late int fkGroup_Edu_id;
+
   AddNewStudentController(this.context) {
     nameEditingController = TextEditingController();
     noteEditingController = TextEditingController();
@@ -81,12 +86,14 @@ class AddNewStudentController {
 
     nameKey = GlobalKey<FormState>();
     phoneKey = GlobalKey<FormState>();
+
     getAll();
     _inputListEducation.add(listNameEducations);
   }
 
   void getAll() async {
     await getAllEducations();
+    await getAllGroupsForIdEducation(1);
   }
 
   Future<List<EducationModel>> getAllEducations() async {
@@ -96,13 +103,20 @@ class AddNewStudentController {
     return listNameEducations;
   }
 
-  void onChangedStage(EducationModel? value) {
+  Future<void> onChangedStage(EducationModel? value) async {
     // _closeKeyboard();
     eduGroup = value;
+
+    if (eduGroup!=null) {
+      await getAllGroupsForIdEducation(eduGroup!.id);
+
+    }
   }
 
-  late String status = StringManager.addNewStudent;
-  late int idNewGroup;
+  Future<void> getAllGroupsForIdEducation(int id) async {
+    GroupOperations groupOperations = GroupOperations();
+    groupOperations.selectGroupsForIdEducation(id);
+  }
 
   //? getArgsFromBackScreen
   void getArgsFromBackScreen() {
@@ -158,10 +172,7 @@ class AddNewStudentController {
   }
 
   void pickImageMethod() {
-    showDialogPickImageMethod(
-      context: context,
-      onPressedPickImage: pickImage,
-    );
+    showDialogPickImageMethod(context: context, onPressedPickImage: pickImage);
   }
 
   Future<void> saveImageOfMyApp(XFile image) async {
