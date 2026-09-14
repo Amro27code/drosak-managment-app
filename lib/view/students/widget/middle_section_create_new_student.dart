@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:drosak_managment_app/model/group/group_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_stream_builder/multiple_stream_builder.dart';
-
 import '../../../core/resources/color_manager.dart';
-import '../../../core/resources/widgets/functions/convert_time_of_period_to_string.dart';
-import '../../../core/resources/widgets/functions/custom_row_elevated_button.dart';
 import '../../../core/resources/widgets/space/horizontal_space.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
 import '../../../core/strings/font_manager.dart';
@@ -21,6 +19,9 @@ class MiddleSectionCreateNewStudent extends StatelessWidget {
     required this.onChangedStage,
     this.initialEduItem,
     required this.selectedEduInEdit,
+    required this.streamListGroup,
+    required this.onChangedGroup,
+    required this.selectedGroupInEdit,
   });
 
   final Function(EducationModel?) onChangedStage;
@@ -29,6 +30,11 @@ class MiddleSectionCreateNewStudent extends StatelessWidget {
 
   final EducationModel? initialEduItem;
 
+  final Stream<List<GroupModel>> streamListGroup;
+
+  final Function(GroupModel?) onChangedGroup;
+
+  final Stream<GroupModel?> selectedGroupInEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +62,7 @@ class MiddleSectionCreateNewStudent extends StatelessWidget {
                       Expanded(
                         child: CustomDropdown<EducationModel>.search(
                           searchHintText: StringManager.search,
-                          hintText:  StringManager.chooseEduStage,
+                          hintText: StringManager.chooseEduStage,
                           items: snapshots.snapshot1.data,
                           initialItem: initialEduItem,
                           // snapshots.snapshot2.data,//initialEduItem,
@@ -101,9 +107,9 @@ class MiddleSectionCreateNewStudent extends StatelessWidget {
               ),
             ),
             horizontalSpace(width: 11),
-            StreamBuilder2<List<EducationModel>, EducationModel?>(
-              // stream: streamListEducation,
-              streams: StreamTuple2(streamListEducation, selectedEduInEdit),
+            StreamBuilder2<List<GroupModel>, GroupModel?>(
+              streams: StreamTuple2(streamListGroup, selectedGroupInEdit),
+              // streams: StreamTuple2(streamListGroup, selectedGroupInEdit),
               builder: (context, snapshots) {
                 return snapshots.snapshot1.connectionState ==
                         ConnectionState.waiting
@@ -111,34 +117,34 @@ class MiddleSectionCreateNewStudent extends StatelessWidget {
                     :
                       //! ========= choose EDU ============
                       Expanded(
-                        child: CustomDropdown<EducationModel>.search(
+                        child: CustomDropdown<GroupModel>.search(
                           searchHintText: StringManager.search,
                           hintText: StringManager.chooseGroup,
                           items: snapshots.snapshot1.data,
-                          initialItem: initialEduItem,
+                          initialItem: snapshots.snapshot2.data,
                           // snapshots.snapshot2.data,//initialEduItem,
                           headerBuilder: (context, selectedItem, enabled) {
                             print(enabled);
                             print(selectedItem);
-                            return Text(
-                              selectedItem.title,
-                              maxLines: 1,
-                              overflow: .ellipsis,
-                            );
+                            return snapshots.snapshot2.data == null
+                                ? Text(StringManager.chooseGroup)
+                                : Text(
+                                    selectedItem.name,
+                                    maxLines: 1,
+                                    overflow: .ellipsis,
+                                  );
                           },
                           listItemBuilder:
                               (context, item, isSelected, onItemSelect) =>
                                   ListTile(
                                     contentPadding: EdgeInsets.zero,
-                                    title: Text(item.title),
-                                    subtitle: item.subtitle.isEmpty
-                                        ? null
-                                        : Text(item.subtitle),
+                                    title: Text(item.name),
+                                    subtitle: Text(item.note ?? ""),
                                     leading: CircleAvatar(
                                       child: Text(item.id.toString()),
                                     ),
                                   ),
-                          onChanged: onChangedStage,
+                          onChanged: onChangedGroup,
                           noResultFoundText:
                               "لم يتم العثور على المرحلة التعليمية",
                         ),

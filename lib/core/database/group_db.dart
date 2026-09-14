@@ -58,7 +58,7 @@ class GroupOperations extends MySqfliteDatabase {
     );
   }
 
-  Future<void> selectGroupsForIdEducation(int id) async {
+  Future<List<GroupModel>> selectGroupsForIdEducation(int id) async {
     var a = await selectWithStatus(
       query:
           "SELECT ${MySqfliteDatabase.groupTable}.*"
@@ -68,7 +68,9 @@ class GroupOperations extends MySqfliteDatabase {
           "AND ${MySqfliteDatabase.groupTable}.${MySqfliteDatabase.groupEduFKColumn}==$id",
     );
 
-    print("eeeeeeeeeeeeeeee");
-    print(a);
+    List<GroupModel> groups = [];
+    groups += a.map((e) => GroupModel.fromJson(e)).toList();
+    print(groups);
+    return groups;
   }
 }

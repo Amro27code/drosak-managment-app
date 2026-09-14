@@ -6,7 +6,6 @@ import 'package:drosak_managment_app/model/group/fk_group_appointment.dart';
 import 'package:drosak_managment_app/model/group/group_model.dart';
 import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 import 'package:flutter/material.dart';
-
 import '../../core/strings/string_manager.dart';
 import '../../view/education/search/search_delegate.dart';
 import '../../view/group/widget/custom_search_delegate.dart';

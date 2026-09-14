@@ -2,7 +2,6 @@ import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:drosak_managment_app/model/group/fk_group_appointment.dart';
 import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
 import 'package:flutter/material.dart';
-
 import '../../../numbers/padding_margin_manager.dart';
 import '../../../numbers/radius_circle_avatar.dart';
 import '../../color_manager.dart';
@@ -15,7 +14,7 @@ class CustomTableWidget extends StatelessWidget {
     this.secondaryRowColor = ColorManager.primary,
     required this.isEdit,
     this.streamTableList,
-    this.onPressedDelete,
+    this.onPressedDelete = null,
     this.groupId,
     this.notStream = false,
     this.fkList,
@@ -38,12 +37,7 @@ class CustomTableWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return notStream
-        ?
-          // asyncSnapshot.connectionState == .waiting ||
-          //     asyncSnapshot.connectionState == .none
-          //     ? SizedBox()
-          //     :
-          fkList == null
+        ? fkList == null
               ? SizedBox()
               : Table(
                   border: TableBorder.all(
@@ -95,7 +89,7 @@ class CustomTableWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (isEdit) Center(child: Text(" ")),
+                        if (isEdit || onPressedDelete!=null) Center(child: Text(" ")),
                       ],
                     ),
                     //!!!!!!!!!!!!!!!!!!
@@ -276,7 +270,7 @@ class CustomTableWidget extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                if (isEdit || onPressedDelete == null)
+                                if (isEdit || onPressedDelete != null)
                                   Padding(
                                     padding: EdgeInsets.symmetric(
                                       vertical: PaddingManager.p4,

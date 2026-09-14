@@ -65,18 +65,19 @@ class _CreateStudentScreenState extends State<CreateStudentScreen> {
                           _addNewStudentController.outputListEducation,
                       selectedEduInEdit:
                           _addNewStudentController.outputEducationEdit,
+                      streamListGroup: _addNewStudentController.outputListGroup,
+                      onChangedGroup: _addNewStudentController.onChangedGroup,
+                      selectedGroupInEdit:
+                          _addNewStudentController.outputGroupEdit,
                     );
                   },
                 ),
                 verticalSpace(height: 21),
                 CustomTableWidget(
-                  // listGroupModel: _addNewGroupController.newListGroupModel,
-                  isEdit: true,
-                  onPressedDelete:
-                      _addNewStudentController.onPressedDeleteRecord,
+                  isEdit: false,
                   streamTableList: _addNewStudentController.outputListNewTable,
                 ),
-
+                verticalSpace(height: 21),
                 Form(
                   key: _addNewStudentController.phoneKey,
                   child: customTextField(

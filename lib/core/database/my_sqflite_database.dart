@@ -31,7 +31,9 @@ class MySqfliteDatabase extends CRUD {
   static const String studentTable = "Student";
   static const String studentIdColumn = "studentId";
   static const String studentNoteColumn = "studentNote";
+  static const String studentCreatedAtColumn = "studentCreatedAt";
   static const String studentNameColumn = "studentName";
+  static const String studentPhoneColumn = "studentName";
   static const String studentImagePathColumn = "studentImagePath";
   static const String studentGroupFKColumn = "groupIDFK";
 
@@ -110,6 +112,7 @@ class MySqfliteDatabase extends CRUD {
       "$studentNameColumn TEXT,"
       "$studentNoteColumn TEXT,"
       "$studentImagePathColumn TEXT,"
+      "$studentCreatedAtColumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
       "$studentGroupFKColumn INTEGER,"
       "CONSTRAINT student_group FOREIGN KEY ($studentGroupFKColumn) REFERENCES $groupTable ($groupIdColumn) ON DELETE CASCADE ON UPDATE CASCADE"
       ");",

@@ -29,6 +29,20 @@ class AppointmentOperations extends MySqfliteDatabase {
 print(list);
     return list;
   }
+  Future<List<AppointmentModel>> selectAppointmentForGroup2({
+    required int groupId,
+  }) async {
+    List<AppointmentModel> list = [];
+
+    List<Map<String, Object?>> data = await selectWhere(
+      tableName: MySqfliteDatabase.appointmentTable,
+      where: "${MySqfliteDatabase.appointmentGroupFKColumn} = ?",
+      whereArgs: [groupId],
+    );
+    list += data.map((item) => AppointmentModel.fromJson(item)).toList();
+print(list);
+    return list;
+  }
 
   Future<int> insertToAppointmentTable(AppointmentModel model,int groupId) async {
     return await insert(

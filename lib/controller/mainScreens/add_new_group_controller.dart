@@ -281,6 +281,7 @@ class AddNewGroupController {
 
       Navigator.of(context).pop();
     } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("املأ الحقول يا محترم"),
@@ -288,6 +289,7 @@ class AddNewGroupController {
         ),
       );
     }
+
   }
 
 
