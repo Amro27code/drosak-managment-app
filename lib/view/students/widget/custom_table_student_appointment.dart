@@ -1,0 +1,304 @@
+import 'package:drosak_managment_app/core/strings/string_manager.dart';
+import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
+import 'package:drosak_managment_app/model/students/student_model.dart';
+import 'package:flutter/material.dart';
+import '../../../core/numbers/padding_margin_manager.dart';
+import '../../../core/numbers/radius_circle_avatar.dart';
+import '../../../core/resources/color_manager.dart';
+
+class CustomTableForStudentWidget extends StatelessWidget {
+  const CustomTableForStudentWidget({
+    super.key,
+    this.tableColor = ColorManager.primary,
+    this.primaryRowColor = ColorManager.primary,
+    this.secondaryRowColor = ColorManager.primary,
+    required this.isEdit,
+    this.streamTableList,
+    this.onPressedDelete = null,
+    this.groupId,
+    this.notStream = false,
+    this.fkList,
+  });
+
+  final Color tableColor;
+  final Color primaryRowColor;
+  final int? groupId;
+  final Color secondaryRowColor;
+  final Stream<List<AppointmentModel>>? streamTableList;
+  final StudentModel? fkList;
+
+  // final int lengthSecondaryRow;
+  final bool isEdit;
+  final bool notStream;
+  final void Function(int)? onPressedDelete;
+
+  // final List<TimeOfDayModel> listGroupModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return notStream
+        ? fkList == null
+        ? SizedBox()
+        : Table(
+      border: TableBorder.all(
+        color: tableColor,
+        borderRadius: BorderRadius.circular(
+          RadiusCircleAvatar.rc15,
+        ),
+      ),
+      children: [
+        TableRow(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: PaddingManager.p4,
+                horizontal: PaddingManager.p12,
+              ),
+              child: Center(
+                child: Text(
+                  StringManager.day,
+                  // textAlign: .end,
+                  style: TextStyle(color: primaryRowColor),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: PaddingManager.p4,
+                horizontal: PaddingManager.p12,
+              ),
+              child: Center(
+                child: Text(
+                  StringManager.time,
+                  style: TextStyle(color: primaryRowColor),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: PaddingManager.p4,
+                horizontal: PaddingManager.p12,
+              ),
+              child: Center(
+                child: Text(
+                  StringManager.tPMorAM,
+                  style: TextStyle(color: primaryRowColor),
+                ),
+              ),
+            ),
+            if (isEdit || onPressedDelete != null)
+              Center(child: Text(" ")),
+          ],
+        ),
+        //!!!!!!!!!!!!!!!!!!
+        for (
+        int i = 0;
+        i < (fkList!.listAppointment ?? []).length;
+        i++
+        )
+          TableRow(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            children: [
+              //! Replace to List.generate
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: PaddingManager.p4,
+                  horizontal: PaddingManager.p12,
+                ),
+                child: Center(
+                  child: Text(
+                    fkList!.listAppointment![i].day,
+                    style: TextStyle(color: secondaryRowColor),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: PaddingManager.p4,
+                  horizontal: PaddingManager.p12,
+                ),
+                child: Center(
+                  child: Text(
+                    fkList!.listAppointment![i].time,
+                    style: TextStyle(color: secondaryRowColor),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: PaddingManager.p4,
+                  horizontal: PaddingManager.p12,
+                ),
+                child: Center(
+                  child: Text(
+                    fkList!.listAppointment![i].tPMorAM,
+                    style: TextStyle(color: secondaryRowColor),
+                  ),
+                ),
+              ),
+              if (isEdit || onPressedDelete != null)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: PaddingManager.p4,
+                    horizontal: PaddingManager.p12,
+                  ),
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () {
+                        onPressedDelete!(i);
+                      },
+                      icon: Icon(
+                        Icons.delete_outline,
+                        size: 22,
+                        color: ColorManager.primary,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+      ],
+    )
+        : StreamBuilder(
+      stream: streamTableList,
+      builder: (context, asyncSnapshot) {
+        return asyncSnapshot.connectionState == .waiting ||
+            asyncSnapshot.connectionState == .none
+            ? SizedBox()
+            : Table(
+          border: TableBorder.all(
+            color: tableColor,
+            borderRadius: BorderRadius.circular(
+              RadiusCircleAvatar.rc15,
+            ),
+          ),
+          children: [
+            TableRow(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: PaddingManager.p4,
+                    horizontal: PaddingManager.p12,
+                  ),
+                  child: Center(
+                    child: Text(
+                      StringManager.day,
+                      // textAlign: .end,
+                      style: TextStyle(color: primaryRowColor),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: PaddingManager.p4,
+                    horizontal: PaddingManager.p12,
+                  ),
+                  child: Center(
+                    child: Text(
+                      StringManager.time,
+                      style: TextStyle(color: primaryRowColor),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: PaddingManager.p4,
+                    horizontal: PaddingManager.p12,
+                  ),
+                  child: Center(
+                    child: Text(
+                      StringManager.tPMorAM,
+                      style: TextStyle(color: primaryRowColor),
+                    ),
+                  ),
+                ),
+                if (isEdit) Center(child: Text(" ")),
+              ],
+            ),
+            for (int i = 0; i < asyncSnapshot.data!.length; i++)
+              if (groupId == asyncSnapshot.data![i].appointmentId ||
+                  groupId == null)
+                TableRow(
+                  //!!!!!!!!!!!!!!!!!!
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  children: [
+                    //! Replace to List.generate
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: PaddingManager.p4,
+                        horizontal: PaddingManager.p12,
+                      ),
+                      child: Center(
+                        child: Text(
+                          asyncSnapshot.data![i].day,
+                          style: TextStyle(
+                            color: secondaryRowColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: PaddingManager.p4,
+                        horizontal: PaddingManager.p12,
+                      ),
+                      child: Center(
+                        child: Text(
+                          asyncSnapshot.data![i].time,
+                          style: TextStyle(
+                            color: secondaryRowColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: PaddingManager.p4,
+                        horizontal: PaddingManager.p12,
+                      ),
+                      child: Center(
+                        child: Text(
+                          asyncSnapshot.data![i].tPMorAM,
+                          style: TextStyle(
+                            color: secondaryRowColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (isEdit || onPressedDelete != null)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: PaddingManager.p4,
+                          horizontal: PaddingManager.p12,
+                        ),
+                        child: Center(
+                          child: IconButton(
+                            onPressed: () {
+                              onPressedDelete!(i);
+                            },
+                            icon: Icon(
+                              Icons.delete_outline,
+                              size: 22,
+                              color: ColorManager.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+          ],
+        );
+      },
+    );
+  }
+}

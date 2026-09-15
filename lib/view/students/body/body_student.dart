@@ -1,15 +1,17 @@
+import 'package:drosak_managment_app/model/students/student_model.dart';
 import 'package:drosak_managment_app/view/students/widget/item_builder_student.dart';
 import 'package:flutter/cupertino.dart' hide RefreshCallback;
 import 'package:flutter/material.dart';
 import '../../../core/numbers/height_manager.dart';
 import '../../../core/numbers/padding_margin_manager.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
-import '../../../model/group/fk_group_appointment.dart';
 
 class BodyStudent extends StatelessWidget {
   final RefreshCallback onRefresh;
 
-  final Stream<List<FkGroupAppointment>> studentListStream;
+  final Stream<List<StudentModel>> studentListStream;
+
+  final Function(int id) deleteFun;
 
   // var groupListStream;
 
@@ -17,13 +19,14 @@ class BodyStudent extends StatelessWidget {
     super.key,
     required this.onRefresh,
     required this.studentListStream,
+    required this.deleteFun,
   });
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: StreamBuilder<List<FkGroupAppointment>>(
+      child: StreamBuilder<List<StudentModel>>(
         stream: studentListStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == .waiting) {
@@ -42,16 +45,14 @@ class BodyStudent extends StatelessWidget {
               itemBuilder: (context, index) => snapshot.data!.length == index
                   ? verticalSpace(height: 40)
                   : ItemBuilderStudent(
-                      groupModel: snapshot.data![index],
+                      studentModel: snapshot.data![index],
                       deleteFun: () {
-                        // _groupController.deleteFun(snapshot.data![index]);
+                        deleteFun(snapshot.data![index].id);
                       },
                       editFun: () {
                         // _groupController.editFun(snapshot.data![index]);
                       },
                       streamTableList: Stream.empty(),
-                      //streamTableList,
-                      imagePath: null,
                     ),
             );
           }

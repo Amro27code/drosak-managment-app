@@ -1,44 +1,63 @@
 import 'dart:async';
+import 'package:drosak_managment_app/core/database/student_db.dart';
 import 'package:drosak_managment_app/core/resources/routes_manager.dart';
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
-import 'package:drosak_managment_app/model/group/group_model.dart';
-import 'package:drosak_managment_app/model/group/time_of_day_model.dart';
+import 'package:drosak_managment_app/model/students/student_model.dart';
 import 'package:flutter/widgets.dart';
-import '../../model/group/fk_group_appointment.dart';
 
 class StudentController {
   late BuildContext _context;
 
-  late StreamController<List<FkGroupAppointment>> _fkListStreamController;
-  late Stream<List<FkGroupAppointment>> fkListOutput;
-  late Sink<List<FkGroupAppointment>> _fkListInput;
-  List<FkGroupAppointment> fkList = [
-    FkGroupAppointment(
-      groupModel: GroupModel(educationFKId: 1, name: "name", note: "note"),
-      appointments: [
-        AppointmentModel(day: "day", time: "t", tPMorAM: "tPMorAM"),
-        AppointmentModel(day: "day", time: "t", tPMorAM: "tPMorAM"),
-      ],
-    ),
-  ];
+  late StreamController<List<StudentModel>> _studentsListStreamController;
+  late Stream<List<StudentModel>> outputStudentsList;
+
+  late Sink<List<StudentModel>> _inputStudentsList;
+
+  List<StudentModel> students = [];
 
   StudentController(BuildContext context) {
     _context = context;
     init();
+    students = [];
   }
 
-  void init() {
-    _fkListStreamController = StreamController();
-    _fkListInput = _fkListStreamController.sink;
-    fkListOutput = _fkListStreamController.stream;
-    _fkListInput.add(fkList);
+  Future<void> init() async {
+    _studentsListStreamController = StreamController();
+    _inputStudentsList = _studentsListStreamController.sink;
+    outputStudentsList = _studentsListStreamController.stream;
+    _inputStudentsList.add(students);
+    // students += await getAllStudent();
+    getAllStudent();
+  }
+
+  Future<void> getAllStudent() async {
+    StudentOperation studentOperation = StudentOperation();
+    students += await studentOperation.selectAllStudent();
+    _inputStudentsList.add(students);
+    print("في صفحة الطلاب");
+    print(students);
   }
 
   void onTapAdd() {
     Navigator.pushNamed(
       _context,
       RouteNames.addNewStudent,
-      arguments: StringManager.addNewStudent
-    ).then((value) => init());
+      arguments: StringManager.addNewStudent,
+    ).then((value) async {
+      await init();
+      _inputStudentsList.add(students);
+    });
+  }
+
+  Future<void> onRefresh() async {
+    await init();
+  }
+
+  Future<void> deleteFun(int id) async {
+    StudentOperation studentOperation = StudentOperation();
+    bool x = await studentOperation.deleteStudent(id);
+    if (x) {
+      await getAllStudent();
+    }
   }
 }

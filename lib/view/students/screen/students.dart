@@ -2,7 +2,6 @@ import 'package:drosak_managment_app/controller/mainScreens/student_controller.d
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:drosak_managment_app/view/students/body/body_student.dart';
 import 'package:flutter/material.dart';
-
 import '../../../core/resources/widgets/appBarWidget/custom_app_bar.dart';
 
 class Students extends StatefulWidget {
@@ -27,12 +26,13 @@ class _StudentsState extends State<Students> {
       appBar: CustomAppBar(
         title: StringManager.students,
         onTapSearch: () {},
-        onTapAdd:_studentController.onTapAdd,
+        onTapAdd: _studentController.onTapAdd,
       ),
       body: BodyStudent(
-        onRefresh: () async {},
-        studentListStream: _studentController.fkListOutput,
+        studentListStream: _studentController.outputStudentsList,
+        onRefresh:_studentController.onRefresh, deleteFun: _studentController.deleteFun,
       ),
     );
   }
 }
+

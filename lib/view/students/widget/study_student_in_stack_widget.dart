@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:drosak_managment_app/core/strings/string_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,28 +9,26 @@ import '../../../core/numbers/height_manager.dart';
 import '../../../core/numbers/width_manager.dart';
 import '../../../core/resources/assets_manager.dart';
 import '../../../core/resources/color_manager.dart';
-import '../../../core/resources/widgets/functions/custom_table_widget.dart';
 import '../../../core/resources/widgets/space/vertical_space.dart';
 import '../../../core/strings/font_manager.dart';
-import '../../../model/group/fk_group_appointment.dart';
 import '../../../model/group/time_of_day_model.dart';
+import '../../../model/students/student_model.dart';
+import 'custom_table_student_appointment.dart';
 
 class StudyStudentInStackWidget extends StatelessWidget {
   const StudyStudentInStackWidget({
     super.key,
-    required this.groupModel,
+    required this.studentModel,
     this.streamTableList,
     required this.editFun,
     required this.deleteFun,
-    this.imagePath,
   });
 
-  final FkGroupAppointment groupModel;
+  final StudentModel studentModel;
   final Stream<List<AppointmentModel>>? streamTableList;
   final VoidCallback editFun;
   final VoidCallback deleteFun;
 
-  final String? imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +68,7 @@ class StudyStudentInStackWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          groupModel.groupModel.name,
+                          studentModel.name,
                           textAlign: .start,
                           style: TextStyle(
                             fontSize: FontSizeManager.s16,
@@ -82,35 +79,38 @@ class StudyStudentInStackWidget extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      //! PopupMenuButton(
-                      //   //! اسحبه
-                      //   itemBuilder: (context) => [
-                      //     PopupMenuItem(
-                      //       onTap: editFun,
-                      //       child: Text(StringManager.edit),
-                      //     ),
-                      //     PopupMenuItem(
-                      //       onTap: deleteFun,
-                      //       child: Text(StringManager.remove),
-                      //     ),
-                      //   ],
-                      //   child: Icon(
-                      //     Icons.more_horiz_outlined,
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
+                      PopupMenuButton(
+                        //! اسحبه
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            onTap: editFun,
+                            child: Text(StringManager.edit),
+                          ),
+                          PopupMenuItem(
+                            onTap: deleteFun,
+                            child: Text(StringManager.remove),
+                          ),
+                        ],
+                        child: Icon(
+                          Icons.more_horiz_outlined,
+                          color: Colors.white,
+                        ),
+                      ),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(
                           CircleRadiusManager.r50,
                         ),
-                        child: imagePath == null
-                            ? SvgPicture.asset(
-                                AssetsValueManager.bnb3,
-                                height: HeightManager.h64,
-                                width: WidthManager.w64,
-                              )
-                            : Image.file(
-                                File(imagePath!),
+                        child:
+                        // studentModel.imagePath
+                            // == null
+                            // ? SvgPicture.asset(
+                            //     AssetsValueManager.bnb3,
+                            //     height: HeightManager.h64,
+                            //     width: WidthManager.w64,
+                            //   )
+                            // :
+                          Image.file(
+                                File(studentModel.imagePath),
                                 height: HeightManager.h64,
                                 fit: .cover,
                                 width: WidthManager.w64,
@@ -125,20 +125,12 @@ class StudyStudentInStackWidget extends StatelessWidget {
                     ],
                   ),
                   verticalSpace(height: 5),
-                  // Text(
-                  //   "اسم المرحلة التعليمية ",
-                  //   style: TextStyle(
-                  //     fontSize: FontSizeManager.s16,
-                  //     color: Colors.white,
-                  //     fontWeight: .w500,
-                  //     fontFamily: FontManager.geDinerOne,
-                  //   ),
-                  // ),
+
                   RichText(
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "اسم المرحلة التعليمية",
+                          text: studentModel.eduName,
                           style: TextStyle(color: Colors.white),
                         ),
                         TextSpan(
@@ -146,7 +138,7 @@ class StudyStudentInStackWidget extends StatelessWidget {
                           style: TextStyle(color: Colors.white38),
                         ),
                         TextSpan(
-                          text: "اسم المجموعة",
+                          text: studentModel.groupName,
                           style: TextStyle(color: ColorManager.primary),
                         ),
                       ],
@@ -154,18 +146,18 @@ class StudyStudentInStackWidget extends StatelessWidget {
                   ),
                   verticalSpace(height: 15),
                   //! TABLE
-                  CustomTableWidget(
+                  CustomTableForStudentWidget(
                     secondaryRowColor: Colors.white,
                     tableColor: Colors.white,
                     isEdit: false,
                     // streamTableList: streamTableList,
                     notStream: true,
-                    fkList: groupModel,
-                    groupId: groupModel.groupModel.id,
+                    fkList: studentModel,
+                    groupId: studentModel.id,
                   ),
                   verticalSpace(height: 5),
                   Text(
-                    "${StringManager.notes}: ${groupModel.groupModel.note ?? ''}",
+                    "${StringManager.notes}: ${studentModel.note ?? ''}",
                     style: TextStyle(
                       fontSize: FontSizeManager.s10,
                       fontWeight: .w400,

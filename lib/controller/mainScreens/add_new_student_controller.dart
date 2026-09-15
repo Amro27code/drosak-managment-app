@@ -277,8 +277,6 @@ class AddNewStudentController {
 
     listAppointment.removeAt(index);
     _inputListNewTable.add(listAppointment);
-    print("listAppointment");
-    print(listAppointment);
   }
 
   Future<void> onPressedSaveAll() async {
@@ -299,25 +297,33 @@ class AddNewStudentController {
       //     await appointmentOperations.insertToAppointmentTable(element, x);
       //   }
       // }
-     int a=await studentOperation.insertNewStudent(
+      int a = await studentOperation.insertNewStudent(
         StudentModel(
           // id: ,
           groupFkId: myGroup!.id,
           name: nameEditingController.text,
           note: noteEditingController.text,
           imagePath: imagePath!,
+          groupName: myGroup!.name,
+          eduName: eduGroup!.title,
         ),
       );
-     print(a);
-     Navigator.of(context).pop();
+      print(a);
+      Navigator.of(context).pop();
+
+      scaffoldMessengerWidget(text: "تمت اضافة الطالب", color: null);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("املأ الحقول يا محترم"),
-          backgroundColor: Colors.red,
-        ),
-      );
+      scaffoldMessengerWidget(text: "املأ الحقول يا محترم");
     }
+  }
+
+  void scaffoldMessengerWidget({
+    required String text,
+    Color? color = Colors.red,
+  }) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(text), backgroundColor: color));
   }
 
   Future<void> editOrSaveAll() async {
@@ -364,12 +370,7 @@ class AddNewStudentController {
 
       Navigator.of(context).pop();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("املأ الحقول يا محترم"),
-          backgroundColor: Colors.red,
-        ),
-      );
+      scaffoldMessengerWidget(text: "املأ الحقول كلها");
     }
   }
 
